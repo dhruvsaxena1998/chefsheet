@@ -1,10 +1,10 @@
 {
-    "cSpell.words": [
-        "chefsheet",
-        "datetime",
-        "nestjs",
-        "ormconfig",
-        "prebuild",
-        "typeorm"
-    ]
+  "cSpell.words": [
+    "chefsheet",
+    "datetime",
+    "nestjs",
+    "ormconfig",
+    "prebuild",
+    "typeorm"
+  ]
 }
