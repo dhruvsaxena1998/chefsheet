@@ -1,18 +1,10 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  UpdateDateColumn,
-  CreateDateColumn,
-} from 'typeorm';
+import { SharedEntity } from 'src/shared/shared.entity';
+import { Entity, Column } from 'typeorm';
 
 @Entity({
   name: 'events',
 })
-export class EventsEntity {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
-
+export class EventsEntity extends SharedEntity {
   @Column()
   name: string;
 
@@ -20,12 +12,12 @@ export class EventsEntity {
   description: string;
 
   @Column({
-    type: 'datetime',
     name: 'start_date',
+    type: 'datetime',
   })
   startDate: Date;
 
-  @Column({ type: 'datetime', name: 'end_date' })
+  @Column({ name: 'end_date', type: 'datetime' })
   endDate: Date;
 
   @Column()
@@ -37,13 +29,7 @@ export class EventsEntity {
   @Column({ type: 'text' })
   location: string;
 
-  @CreateDateColumn({ name: 'created_at' })
-  createdAt: Date;
-
-  @UpdateDateColumn({ name: 'updated_at' })
-  updatedAt: Date;
-
-  // assignedTo: relation to user
-  // inventory: relation to inventory
-  // staffMembers: relation to staffMembers
+  //TODO: assignedTo: relation to user
+  //TODO: inventory: relation to inventory
+  //TODO: staffMembers: relation to staffMembers
 }

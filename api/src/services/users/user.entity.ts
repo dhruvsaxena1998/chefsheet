@@ -1,18 +1,8 @@
-import {
-  PrimaryGeneratedColumn,
-  Column,
-  Entity,
-  UpdateDateColumn,
-  CreateDateColumn,
-} from 'typeorm';
+import { SharedEntity } from 'src/shared/shared.entity';
+import { Column, Entity } from 'typeorm';
 
 @Entity({ name: 'users' })
-export class UserEntity {
-  @PrimaryGeneratedColumn('uuid', {
-    name: 'id',
-  })
-  id: number;
-
+export class UserEntity extends SharedEntity {
   @Column()
   name: string;
 
@@ -44,10 +34,4 @@ export class UserEntity {
 
   @Column({ type: 'text', nullable: true, name: 'reset_password_token' })
   resetPasswordToken: string;
-
-  @UpdateDateColumn({ name: 'updated_at' })
-  updatedAt: Date;
-
-  @CreateDateColumn({ name: 'created_at' })
-  createdAt: Date;
 }
