@@ -4,21 +4,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import ormconfig from './config/ormconfig';
 
-import { UsersModule } from './services/users/users.module';
-import { EventsModule } from './services/events/events.module';
-import { ItemsModule } from './services/items/items.module';
-import { CategoryModule } from './services/category/category.module';
-import { SubCategoryModule } from './services/sub-category/sub-category.module';
+import { ApiModule } from './api.module';
 
 @Module({
-  imports: [
-    TypeOrmModule.forRoot(ormconfig),
-    UsersModule,
-    EventsModule,
-    ItemsModule,
-    CategoryModule,
-    SubCategoryModule,
-  ],
+  imports: [TypeOrmModule.forRoot(ormconfig), ApiModule],
   controllers: [AppController],
 })
 export class AppModule {}
