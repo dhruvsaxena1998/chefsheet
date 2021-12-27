@@ -1,11 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  NotFoundException,
-  Param,
-  Post,
-} from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { AddSubCategoryDTO } from './dto';
 import { SubCategoryService } from './sub-category.service';
 
@@ -15,13 +8,7 @@ export class SubCategoryController {
 
   @Get('/:id')
   async findOne(@Param('id') id: string) {
-    const entity = await this.subCategoryService.findOne(id);
-
-    if (!entity) {
-      throw new NotFoundException();
-    }
-
-    return entity;
+    return await this.subCategoryService.findOne(id);
   }
 
   @Post('/:category')

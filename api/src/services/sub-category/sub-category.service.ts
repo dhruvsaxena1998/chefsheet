@@ -1,31 +1,37 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { AddSubCategoryDTO } from './dto';
 import { SubCategoryEntity } from './sub-category.entity';
+import { SubCategoryRepository } from './sub-category.repository';
 
 @Injectable()
 export class SubCategoryService {
   constructor(
-    @InjectRepository(SubCategoryEntity)
-    private readonly subCategoryRepository: Repository<SubCategoryEntity>,
+    @InjectRepository(SubCategoryRepository)
+    private readonly subCategoryRepository: SubCategoryRepository,
   ) {}
 
-  findAllByCategory(category: string) {
+  findAllByCategory(category: string): Promise<SubCategoryEntity[]> {
     return this.subCategoryRepository.find({
       where: { category, deleted: false },
       select: ['id', 'name', 'code'],
     });
   }
 
-  findOne(id: string) {
-    return this.subCategoryRepository.findOne(id, {
+  async findOne(id: string): Promise<SubCategoryEntity> {
+    const entity = await this.subCategoryRepository.findOne(id, {
       relations: ['category'],
       where: { deleted: false },
     });
+
+    if (!entity) {
+      throw new NotFoundException();
+    }
+
+    return entity;
   }
 
-  create(dto: AddSubCategoryDTO) {
+  create(dto: AddSubCategoryDTO): Promise<SubCategoryEntity> {
     const categoryData = this.subCategoryRepository.create(dto);
     return this.subCategoryRepository.save(categoryData);
   }
