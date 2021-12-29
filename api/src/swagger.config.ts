@@ -4,12 +4,11 @@ export const documentConfig = (
   title = 'API Documentations',
   description = '',
   version = '1.0',
-  path = '/api-docs',
 ) => {
   return new DocumentBuilder()
     .setTitle(title)
+    .addServer('http://localhost:3000', 'Localhost')
     .setDescription(description)
     .setVersion(version)
-    .setBasePath(path)
     .build();
 };
