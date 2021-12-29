@@ -11,11 +11,8 @@ export class SubCategoryService {
     private readonly subCategoryRepository: SubCategoryRepository,
   ) {}
 
-  findAllByCategory(category: string): Promise<SubCategoryEntity[]> {
-    return this.subCategoryRepository.find({
-      where: { category, deleted: false },
-      select: ['id', 'name', 'code'],
-    });
+  find() {
+    return this.subCategoryRepository.findAndCount();
   }
 
   async findOne(id: string): Promise<SubCategoryEntity> {
@@ -24,11 +21,17 @@ export class SubCategoryService {
       where: { deleted: false },
     });
 
-    if (!entity) {
-      throw new NotFoundException();
-    }
+    if (!entity) throw new NotFoundException();
 
     return entity;
+  }
+
+  // specific to sub-category
+  findAllByCategory(category: string): Promise<SubCategoryEntity[]> {
+    return this.subCategoryRepository.find({
+      where: { category, deleted: false },
+      select: ['id', 'name', 'code'],
+    });
   }
 
   create(dto: AddSubCategoryDTO): Promise<SubCategoryEntity> {
@@ -36,12 +39,30 @@ export class SubCategoryService {
     return this.subCategoryRepository.save(categoryData);
   }
 
-  async update(id: string, dto: UpdateSubCategoryDTO) {
+  async update(
+    id: string,
+    dto: UpdateSubCategoryDTO,
+  ): Promise<SubCategoryEntity> {
+    let entity = await this.findOne(id);
+
+    entity = {
+      ...entity,
+      name: dto.name || entity.name,
+      code: dto.code || entity.code,
+    };
+
+    this.subCategoryRepository.update(id, entity);
+    return entity;
+  }
+
+  async delete(id: string): Promise<void> {
     const entity = await this.findOne(id);
+    this.subCategoryRepository.delete(entity.id);
+  }
 
-    entity.name = dto.name || entity.name;
-    entity.code = dto.code || entity.code;
-
-    return this.subCategoryRepository.update(id, entity);
+  count() {
+    return this.subCategoryRepository.count({
+      where: { deleted: false },
+    });
   }
 }
