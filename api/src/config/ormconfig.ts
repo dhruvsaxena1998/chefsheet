@@ -4,7 +4,7 @@ const config: SqliteConnectionOptions = {
   type: 'sqlite',
   database: 'db',
   entities: ['dist/services/**/*.entity.js'],
-  synchronize: true,
+  synchronize: false,
   migrations: ['dist/config/migrations/*.js'],
   cli: {
     migrationsDir: 'src/config/migrations',
