@@ -6,5 +6,13 @@
     "ormconfig",
     "prebuild",
     "typeorm"
+  ],
+  "sqltools.connections": [
+    {
+      "previewLimit": 50,
+      "driver": "SQLite",
+      "database": "${workspaceFolder:chefsheet}/api/db",
+      "name": "chefsheet"
+    }
   ]
 }
