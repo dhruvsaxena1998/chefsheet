@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { AddSubCategoryDTO, UpdateSubCategoryDTO } from './dto';
+import { ObjectLiteral } from 'typeorm';
+import { AddSubCategoryDTO, CountQSParams, UpdateSubCategoryDTO } from './dto';
 import { SubCategoryEntity } from './sub-category.entity';
 import { SubCategoryRepository } from './sub-category.repository';
 
@@ -60,7 +61,13 @@ export class SubCategoryService {
     this.subCategoryRepository.delete(entity.id);
   }
 
-  count() {
+  count(queryParams: CountQSParams) {
+    if (queryParams) {
+      return this.subCategoryRepository.count({
+        where: queryParams,
+      });
+    }
+
     return this.subCategoryRepository.count({
       where: { deleted: false },
     });

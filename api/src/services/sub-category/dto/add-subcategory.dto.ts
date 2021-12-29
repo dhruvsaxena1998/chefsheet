@@ -4,17 +4,22 @@ import { CategoryEntity } from 'src/services/category';
 import { DeepPartial } from 'typeorm';
 
 export class AddSubCategoryDTO {
-  @ApiProperty()
+  @ApiProperty({
+    default: '',
+  })
   @IsNotEmpty()
   name: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    default: '',
+  })
   @IsNotEmpty()
   code: string;
 
   @ApiProperty({
     type: 'string',
     description: 'Category ID',
+    default: '',
   })
   @IsNotEmpty()
   category: DeepPartial<CategoryEntity>;
