@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { AddSubCategoryDTO } from './dto';
+import { AddSubCategoryDTO, UpdateSubCategoryDTO } from './dto';
 import { SubCategoryEntity } from './sub-category.entity';
 import { SubCategoryRepository } from './sub-category.repository';
 
@@ -34,5 +34,14 @@ export class SubCategoryService {
   create(dto: AddSubCategoryDTO): Promise<SubCategoryEntity> {
     const categoryData = this.subCategoryRepository.create(dto);
     return this.subCategoryRepository.save(categoryData);
+  }
+
+  async update(id: string, dto: UpdateSubCategoryDTO) {
+    const entity = await this.findOne(id);
+
+    entity.name = dto.name || entity.name;
+    entity.code = dto.code || entity.code;
+
+    return this.subCategoryRepository.update(id, entity);
   }
 }
