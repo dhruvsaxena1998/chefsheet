@@ -6,13 +6,12 @@ export class CountSubCategoryResponse {
   count: number;
 }
 
-type FindAllSubCategoryEntities = Omit<SubCategoryEntity, 'category'>;
 export class FindAllSubCategoryResponse {
   @ApiProperty({
     type: SubCategoryEntity,
     isArray: true,
   })
-  entities: FindAllSubCategoryEntities[];
+  entities: SubCategoryEntity[];
 
   @ApiProperty()
   count: number;

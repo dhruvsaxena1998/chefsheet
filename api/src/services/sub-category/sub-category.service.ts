@@ -1,6 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ObjectLiteral } from 'typeorm';
 import { AddSubCategoryDTO, CountQSParams, UpdateSubCategoryDTO } from './dto';
 import { SubCategoryEntity } from './sub-category.entity';
 import { SubCategoryRepository } from './sub-category.repository';
@@ -12,13 +11,15 @@ export class SubCategoryService {
     private readonly subCategoryRepository: SubCategoryRepository,
   ) {}
 
-  find() {
-    return this.subCategoryRepository.findAndCount();
+  async find(): Promise<[SubCategoryEntity[], number]> {
+    return this.subCategoryRepository.findAndCount({
+      loadRelationIds: true,
+    });
   }
 
   async findOne(id: string): Promise<SubCategoryEntity> {
     const entity = await this.subCategoryRepository.findOne(id, {
-      relations: ['category'],
+      loadRelationIds: true,
       where: { deleted: false },
     });
 
@@ -27,23 +28,23 @@ export class SubCategoryService {
     return entity;
   }
 
-  // specific to sub-category
-  findAllByCategory(category: string): Promise<SubCategoryEntity[]> {
+  async findAllByCategory(category: string): Promise<SubCategoryEntity[]> {
     return this.subCategoryRepository.find({
       where: { category, deleted: false },
       select: ['id', 'name', 'code'],
     });
   }
 
-  create(dto: AddSubCategoryDTO): Promise<SubCategoryEntity> {
-    const categoryData = this.subCategoryRepository.create(dto);
-    return this.subCategoryRepository.save(categoryData);
+  create(dto: AddSubCategoryDTO): SubCategoryEntity {
+    return this.subCategoryRepository.create(dto);
   }
 
-  async update(
-    id: string,
-    dto: UpdateSubCategoryDTO,
-  ): Promise<SubCategoryEntity> {
+  async insert(dto: AddSubCategoryDTO): Promise<SubCategoryEntity> {
+    const data = this.create(dto);
+    return this.subCategoryRepository.save(data);
+  }
+
+  async update(id: string, dto: UpdateSubCategoryDTO): Promise<SubCategoryEntity> {
     let entity = await this.findOne(id);
 
     entity = {
@@ -56,12 +57,14 @@ export class SubCategoryService {
     return entity;
   }
 
-  async delete(id: string): Promise<void> {
+  async delete(id: string): Promise<SubCategoryEntity> {
     const entity = await this.findOne(id);
     this.subCategoryRepository.delete(entity.id);
+
+    return entity;
   }
 
-  count(queryParams: CountQSParams) {
+  async count(queryParams: CountQSParams): Promise<number> {
     if (queryParams) {
       return this.subCategoryRepository.count({
         where: queryParams,

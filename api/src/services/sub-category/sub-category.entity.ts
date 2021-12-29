@@ -1,11 +1,10 @@
-import { Entity, Column, ManyToOne } from 'typeorm';
+import { Entity, Column, ManyToOne, JoinColumn } from 'typeorm';
 import { SharedEntity } from 'src/shared/shared.entity';
 import { CategoryEntity } from '../category';
 import { ApiProperty } from '@nestjs/swagger';
 
-@Entity({
-  name: 'sub_category',
-})
+export const SubCategoryTableName = 'sub_categories';
+@Entity({ name: SubCategoryTableName })
 export class SubCategoryEntity extends SharedEntity {
   @ApiProperty()
   @Column()
@@ -15,7 +14,10 @@ export class SubCategoryEntity extends SharedEntity {
   @Column()
   code: string;
 
-  @ApiProperty()
-  @ManyToOne(() => CategoryEntity)
+  @ApiProperty({
+    type: 'string',
+  })
+  @ManyToOne(() => CategoryEntity, (category) => category.subCategories)
+  @JoinColumn({ name: 'category_id' })
   category: CategoryEntity;
 }
