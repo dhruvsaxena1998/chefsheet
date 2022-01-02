@@ -15,10 +15,9 @@ export class SubCategoryController {
 
   @Get('/')
   @ApiOperation({ summary: 'Return all sub-categories' })
-  @ApiOkResponse({ status: 200, type: FindAllSubCategoryResponse })
-  async findAllSubCategories(): Promise<FindAllSubCategoryResponse> {
-    const [entities, count] = await this.subCategoryService.find();
-    return { entities, count };
+  @ApiOkResponse({ status: 200, type: SubCategoryEntity, isArray: true })
+  findAllSubCategories(): Promise<SubCategoryEntity[]> {
+    return this.subCategoryService.find();
   }
 
   @Post('/')
@@ -39,7 +38,7 @@ export class SubCategoryController {
   @Get('/:id')
   @ApiOperation({ summary: 'Return sub-category by id' })
   @ApiOkResponse({ status: 200, type: SubCategoryEntity })
-  async findOneSubCategory(@Param('id') id: string): Promise<SubCategoryEntity> {
+  findOneSubCategory(@Param('id') id: string): Promise<SubCategoryEntity> {
     return this.subCategoryService.findOne(id);
   }
 

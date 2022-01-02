@@ -3,9 +3,8 @@ import { SharedEntity } from 'src/shared/shared.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { SubCategoryEntity } from '../sub-category';
 
-@Entity({
-  name: 'categories',
-})
+export const CategoryTableName = 'categories';
+@Entity({ name: CategoryTableName })
 export class CategoryEntity extends SharedEntity {
   @ApiProperty()
   @Column()

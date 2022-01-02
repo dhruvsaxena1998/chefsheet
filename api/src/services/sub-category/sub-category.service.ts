@@ -11,8 +11,8 @@ export class SubCategoryService {
     private readonly subCategoryRepository: SubCategoryRepository,
   ) {}
 
-  async find(): Promise<[SubCategoryEntity[], number]> {
-    return this.subCategoryRepository.findAndCount({
+  async find(): Promise<SubCategoryEntity[]> {
+    return this.subCategoryRepository.find({
       loadRelationIds: true,
     });
   }
