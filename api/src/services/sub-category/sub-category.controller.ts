@@ -4,8 +4,8 @@ import { ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestj
 import { SubCategoryEntity } from './sub-category.entity';
 import { SubCategoryService } from './sub-category.service';
 
-import { CountSubCategoryResponse, FindAllSubCategoryResponse } from './types';
-import { AddSubCategoryDTO, UpdateSubCategoryDTO, CountQSParams } from './dto';
+import { CountSubCategoryResponse } from './types';
+import { AddSubCategoryDTO, UpdateSubCategoryDTO, QSParams } from './dto';
 
 export const SubCategoryRoute = 'sub-categories';
 @ApiTags(SubCategoryRoute)
@@ -16,21 +16,14 @@ export class SubCategoryController {
   @Get('/')
   @ApiOperation({ summary: 'Return all sub-categories' })
   @ApiOkResponse({ status: 200, type: SubCategoryEntity, isArray: true })
-  findAllSubCategories(): Promise<SubCategoryEntity[]> {
-    return this.subCategoryService.find();
-  }
-
-  @Post('/')
-  @ApiOperation({ summary: 'Create sub-category' })
-  @ApiCreatedResponse({ status: 201, type: SubCategoryEntity })
-  createSubCategory(@Body() dto: AddSubCategoryDTO): Promise<SubCategoryEntity> {
-    return this.subCategoryService.insert(dto);
+  findAllSubCategories(@Query() queryParams?: QSParams): Promise<SubCategoryEntity[]> {
+    return this.subCategoryService.find(queryParams);
   }
 
   @Get('/count')
   @ApiOperation({ summary: 'Return count for sub-category' })
   @ApiOkResponse({ status: 200, type: CountSubCategoryResponse })
-  async count(@Query() queryParams: CountQSParams): Promise<CountSubCategoryResponse> {
+  async count(@Query() queryParams: QSParams): Promise<CountSubCategoryResponse> {
     const count = await this.subCategoryService.count(queryParams);
     return { count };
   }
@@ -40,6 +33,13 @@ export class SubCategoryController {
   @ApiOkResponse({ status: 200, type: SubCategoryEntity })
   findOneSubCategory(@Param('id') id: string): Promise<SubCategoryEntity> {
     return this.subCategoryService.findOne(id);
+  }
+
+  @Post('/')
+  @ApiOperation({ summary: 'Create sub-category' })
+  @ApiCreatedResponse({ status: 201, type: SubCategoryEntity })
+  createSubCategory(@Body() dto: AddSubCategoryDTO): Promise<SubCategoryEntity> {
+    return this.subCategoryService.insert(dto);
   }
 
   @Post('/:category')
@@ -52,7 +52,7 @@ export class SubCategoryController {
   @Put('/:id')
   @ApiOperation({ summary: 'Update sub-category by id' })
   @ApiOkResponse({ status: 200, type: SubCategoryEntity })
-  updateSubCategory(@Param('id') id: string, @Body() dto: UpdateSubCategoryDTO) {
+  updateSubCategory(@Param('id') id: string, @Body() dto: UpdateSubCategoryDTO): Promise<SubCategoryEntity> {
     return this.subCategoryService.update(id, dto);
   }
 

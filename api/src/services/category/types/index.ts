@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class CountSubCategoryResponse {
+export class CountCategoryResponse {
   @ApiProperty()
   count: number;
 }

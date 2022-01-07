@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { AddSubCategoryDTO, CountQSParams, UpdateSubCategoryDTO } from './dto';
+import { AddSubCategoryDTO, QSParams, UpdateSubCategoryDTO } from './dto';
 import { SubCategoryEntity } from './sub-category.entity';
 import { SubCategoryRepository } from './sub-category.repository';
 
@@ -11,9 +11,19 @@ export class SubCategoryService {
     private readonly subCategoryRepository: SubCategoryRepository,
   ) {}
 
-  async find(): Promise<SubCategoryEntity[]> {
+  find(queryParams?: QSParams): Promise<SubCategoryEntity[]> {
+    let whereClause = { deleted: false };
+
+    if (queryParams) {
+      whereClause = {
+        ...whereClause,
+        ...queryParams,
+      };
+    }
+
     return this.subCategoryRepository.find({
       loadRelationIds: true,
+      where: whereClause,
     });
   }
 
@@ -64,15 +74,18 @@ export class SubCategoryService {
     return entity;
   }
 
-  async count(queryParams: CountQSParams): Promise<number> {
+  count(queryParams?: QSParams): Promise<number> {
+    let whereClause = { deleted: false };
+
     if (queryParams) {
-      return this.subCategoryRepository.count({
-        where: queryParams,
-      });
+      whereClause = {
+        ...whereClause,
+        ...queryParams,
+      };
     }
 
     return this.subCategoryRepository.count({
-      where: { deleted: false },
+      where: whereClause,
     });
   }
 }

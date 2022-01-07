@@ -4,15 +4,11 @@ import { CategoryEntity } from 'src/services/category';
 import { DeepPartial } from 'typeorm';
 
 export class AddSubCategoryDTO {
-  @ApiProperty({
-    default: '',
-  })
+  @ApiProperty({ default: '' })
   @IsNotEmpty()
   name: string;
 
-  @ApiProperty({
-    default: '',
-  })
+  @ApiProperty({ default: '' })
   @IsNotEmpty()
   code: string;
 
