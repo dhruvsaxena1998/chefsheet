@@ -4,7 +4,7 @@ import { CategoryEntity } from './category.entity';
 import { CategoryService } from './category.service';
 
 import { AddCategoryDTO, QSParams, UpdateCategoryDTO } from './dto';
-import { CountCategoryResponse } from './types';
+import { CountResponse } from '../../shared/shared.types';
 
 export const CategoryRoute = 'categories';
 @ApiTags(CategoryRoute)
@@ -21,8 +21,8 @@ export class CategoryController {
 
   @Get('/count')
   @ApiOperation({ summary: 'Return count for category' })
-  @ApiOkResponse({ status: 200, type: CountCategoryResponse })
-  async count(@Query() queryParams?: QSParams): Promise<CountCategoryResponse> {
+  @ApiOkResponse({ status: 200, type: CountResponse })
+  async count(@Query() queryParams?: QSParams): Promise<CountResponse> {
     const count = await this.categoryService.count(queryParams);
     return { count };
   }

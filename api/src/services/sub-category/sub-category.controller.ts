@@ -4,7 +4,7 @@ import { ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestj
 import { SubCategoryEntity } from './sub-category.entity';
 import { SubCategoryService } from './sub-category.service';
 
-import { CountSubCategoryResponse } from './types';
+import { CountResponse } from '../../shared/shared.types';
 import { AddSubCategoryDTO, UpdateSubCategoryDTO, QSParams } from './dto';
 
 export const SubCategoryRoute = 'sub-categories';
@@ -22,8 +22,8 @@ export class SubCategoryController {
 
   @Get('/count')
   @ApiOperation({ summary: 'Return count for sub-category' })
-  @ApiOkResponse({ status: 200, type: CountSubCategoryResponse })
-  async count(@Query() queryParams: QSParams): Promise<CountSubCategoryResponse> {
+  @ApiOkResponse({ status: 200, type: CountResponse })
+  async count(@Query() queryParams: QSParams): Promise<CountResponse> {
     const count = await this.subCategoryService.count(queryParams);
     return { count };
   }

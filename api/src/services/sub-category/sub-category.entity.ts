@@ -11,9 +11,9 @@ export class SubCategoryEntity extends SharedEntity {
   name: string;
 
   @ApiProperty()
-  @Column()
+  @Column({ unique: true })
   code: string;
-
+ 
   @ApiProperty({
     type: 'string',
   })

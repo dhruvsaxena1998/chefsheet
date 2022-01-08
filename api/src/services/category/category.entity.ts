@@ -11,7 +11,7 @@ export class CategoryEntity extends SharedEntity {
   name: string;
 
   @ApiProperty()
-  @Column()
+  @Column({ unique: true })
   code: string;
 
   @OneToMany(() => SubCategoryEntity, (subCategory) => subCategory.category)
