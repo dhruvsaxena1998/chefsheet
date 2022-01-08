@@ -4,8 +4,8 @@ import { ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestj
 import { SubCategoryEntity } from './sub-category.entity';
 import { SubCategoryService } from './sub-category.service';
 
-import { CountSubCategoryResponse, FindAllSubCategoryResponse } from './types';
-import { AddSubCategoryDTO, UpdateSubCategoryDTO, CountQSParams } from './dto';
+import { CountResponse } from '../../shared/shared.types';
+import { AddSubCategoryDTO, UpdateSubCategoryDTO, QSParams } from './dto';
 
 export const SubCategoryRoute = 'sub-categories';
 @ApiTags(SubCategoryRoute)
@@ -15,23 +15,15 @@ export class SubCategoryController {
 
   @Get('/')
   @ApiOperation({ summary: 'Return all sub-categories' })
-  @ApiOkResponse({ status: 200, type: FindAllSubCategoryResponse })
-  async findAllSubCategories(): Promise<FindAllSubCategoryResponse> {
-    const [entities, count] = await this.subCategoryService.find();
-    return { entities, count };
-  }
-
-  @Post('/')
-  @ApiOperation({ summary: 'Create sub-category' })
-  @ApiCreatedResponse({ status: 201, type: SubCategoryEntity })
-  createSubCategory(@Body() dto: AddSubCategoryDTO): Promise<SubCategoryEntity> {
-    return this.subCategoryService.insert(dto);
+  @ApiOkResponse({ status: 200, type: SubCategoryEntity, isArray: true })
+  findAllSubCategories(@Query() queryParams?: QSParams): Promise<SubCategoryEntity[]> {
+    return this.subCategoryService.find(queryParams);
   }
 
   @Get('/count')
   @ApiOperation({ summary: 'Return count for sub-category' })
-  @ApiOkResponse({ status: 200, type: CountSubCategoryResponse })
-  async count(@Query() queryParams: CountQSParams): Promise<CountSubCategoryResponse> {
+  @ApiOkResponse({ status: 200, type: CountResponse })
+  async count(@Query() queryParams: QSParams): Promise<CountResponse> {
     const count = await this.subCategoryService.count(queryParams);
     return { count };
   }
@@ -39,8 +31,15 @@ export class SubCategoryController {
   @Get('/:id')
   @ApiOperation({ summary: 'Return sub-category by id' })
   @ApiOkResponse({ status: 200, type: SubCategoryEntity })
-  async findOneSubCategory(@Param('id') id: string): Promise<SubCategoryEntity> {
+  findOneSubCategory(@Param('id') id: string): Promise<SubCategoryEntity> {
     return this.subCategoryService.findOne(id);
+  }
+
+  @Post('/')
+  @ApiOperation({ summary: 'Create sub-category' })
+  @ApiCreatedResponse({ status: 201, type: SubCategoryEntity })
+  createSubCategory(@Body() dto: AddSubCategoryDTO): Promise<SubCategoryEntity> {
+    return this.subCategoryService.insert(dto);
   }
 
   @Post('/:category')
@@ -53,7 +52,7 @@ export class SubCategoryController {
   @Put('/:id')
   @ApiOperation({ summary: 'Update sub-category by id' })
   @ApiOkResponse({ status: 200, type: SubCategoryEntity })
-  updateSubCategory(@Param('id') id: string, @Body() dto: UpdateSubCategoryDTO) {
+  updateSubCategory(@Param('id') id: string, @Body() dto: UpdateSubCategoryDTO): Promise<SubCategoryEntity> {
     return this.subCategoryService.update(id, dto);
   }
 

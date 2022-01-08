@@ -1,17 +1,10 @@
-import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsOptional } from 'class-validator';
 
-export class QSParams {
-  @ApiProperty({
-    required: false,
-  })
+export class UpdateCategoryDTO {
   @IsNotEmpty()
   @IsOptional()
   name?: string;
 
-  @ApiProperty({
-    required: false,
-  })
   @IsNotEmpty()
   @IsOptional()
   code?: string;
