@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AddSubCategoryDTO, QSParams, UpdateSubCategoryDTO } from './dto';
+
 import { SubCategoryEntity } from './sub-category.entity';
 import { SubCategoryRepository } from './sub-category.repository';
 
@@ -56,13 +57,7 @@ export class SubCategoryService {
 
   async update(id: string, dto: UpdateSubCategoryDTO): Promise<SubCategoryEntity> {
     let entity = await this.findOne(id);
-
-    entity = {
-      ...entity,
-      name: dto.name || entity.name,
-      code: dto.code || entity.code,
-    };
-
+    entity = this.subCategoryRepository.merge(entity, dto);
     this.subCategoryRepository.update(id, entity);
     return entity;
   }
