@@ -5,7 +5,6 @@ import { CategoryEntity } from './category.entity';
 import { CategoryRepository } from './category.repository';
 
 import { AddCategoryDTO, QSParams, UpdateCategoryDTO } from './dto';
-import {} from './dto/update-category.dto';
 
 @Injectable()
 export class CategoryService {

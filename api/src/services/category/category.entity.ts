@@ -1,5 +1,5 @@
 import { Column, Entity, JoinTable, OneToMany } from 'typeorm';
-import { SharedEntity } from 'src/shared/shared.entity';
+import { SharedEntity } from '../../shared/shared.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { SubCategoryEntity } from '../sub-category';
 

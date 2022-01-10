@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { CountResponse } from 'src/shared/shared.types';
+import { CountResponse } from '../../shared/shared.types';
 
 import { AddItemDTO, QSParams, UpdateItemDTO } from './dto';
 import { ItemsEntity } from './items.entity';

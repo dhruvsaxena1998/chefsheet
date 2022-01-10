@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Entity, Column, ManyToOne, JoinColumn } from 'typeorm';
-import { SharedEntity } from 'src/shared/shared.entity';
+import { SharedEntity } from '../../shared/shared.entity';
 
 import { CategoryEntity } from '../category';
 
@@ -14,7 +14,7 @@ export class SubCategoryEntity extends SharedEntity {
   @ApiProperty()
   @Column({ unique: true })
   code: string;
- 
+
   @ApiProperty({
     type: 'string',
   })
