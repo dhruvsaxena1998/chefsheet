@@ -5,7 +5,8 @@ import { Entity, Column, ManyToOne, JoinColumn } from 'typeorm';
 import { CategoryEntity } from '../category';
 import { SubCategoryEntity } from '../sub-category';
 
-@Entity({ name: 'items' })
+export const ItemsTableName = 'items'
+@Entity({ name: ItemsTableName })
 export class ItemsEntity extends SharedEntity {
   @ApiProperty()
   @Column()

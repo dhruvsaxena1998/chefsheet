@@ -1,4 +1,4 @@
-export { ItemsEntity } from './items.entity';
 export { ItemsModule } from './items.module';
-export { ItemsController } from './items.controller';
+export { ItemsEntity, ItemsTableName } from './items.entity';
+export { ItemsController, ItemsRoute } from './items.controller';
 export { ItemsService } from './items.service';
