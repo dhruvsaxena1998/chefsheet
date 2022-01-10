@@ -5,14 +5,7 @@
     "nestjs",
     "ormconfig",
     "prebuild",
+    "sqltools",
     "typeorm"
-  ],
-  "sqltools.connections": [
-    {
-      "previewLimit": 50,
-      "driver": "SQLite",
-      "database": "${workspaceFolder:chefsheet}/api/db",
-      "name": "chefsheet"
-    }
   ]
 }
