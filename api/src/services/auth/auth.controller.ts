@@ -1,13 +1,29 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
-import { ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, Query } from '@nestjs/common';
+import { ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
+import { LoginDTO } from './dto';
+import { RegisterDTO } from './dto/register.dto';
 
-export const AuthRoute = 'users';
+export const AuthRoute = 'auth';
 
 @ApiTags(AuthRoute)
 @Controller(AuthRoute)
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  
+  @Post('/login')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Login' })
+  @ApiOkResponse({ status: 200, description: 'Success' })
+  login(@Body() dto: LoginDTO) {
+    return this.authService.login(dto);
+  }
+
+  @Post('/register')
+  @ApiOperation({ summary: 'Register' })
+  @ApiCreatedResponse({ status: 201, description: 'Success' })
+  register(@Body() dto: RegisterDTO) {
+    console.log(dto);
+    return dto;
+  }
 }
