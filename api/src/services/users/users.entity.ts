@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { SharedEntity } from '../../shared/shared.entity';
 import { Entity, Column, ManyToOne, JoinColumn } from 'typeorm';
+import { IsEmail } from 'class-validator';
 
 export const UsersTableName = 'users';
 
@@ -23,7 +24,10 @@ export class UsersEntity extends SharedEntity {
   password: string;
 
   @ApiProperty()
-  @Column()
+  @Column({ default: 'manager' })
+  /**
+   * manager, admin, superadmin
+   */
   role: string;
 
   @ApiProperty()

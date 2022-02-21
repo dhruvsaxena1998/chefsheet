@@ -23,7 +23,20 @@ export class AuthController {
   @ApiOperation({ summary: 'Register' })
   @ApiCreatedResponse({ status: 201, description: 'Success' })
   register(@Body() dto: RegisterDTO) {
-    console.log(dto);
-    return dto;
+    return this.authService.register(dto);
+  }
+
+  @Post('/register/admin')
+  @ApiOperation({ summary: 'Register admin' })
+  @ApiCreatedResponse({ status: 201, description: 'Success' })
+  registerAdmin(@Body() dto: RegisterDTO) {
+    return this.authService.registerAsAdmin(dto);
+  }
+
+  @Post('/register/superadmin')
+  @ApiOperation({ summary: 'Register superadmin' })
+  @ApiCreatedResponse({ status: 201, description: 'Success' })
+  registerSuperAdmin(@Body() dto: RegisterDTO) {
+    return this.authService.registerAsSuperAdmin(dto);
   }
 }
