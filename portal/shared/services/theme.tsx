@@ -31,9 +31,9 @@ export const getTheme = (): string | null => {
 /**
  * setTheme function requires to be executed on the client side.
  * You can also wrap it with useEffect hook to be assured that they are executed on the client side.
- * @param {string} theme 
+ * @param {string} theme
  * Check available themes in tailwindcss config.
- * 
+ *
  * @example
  * ```tsx
  * import { useEffect } from 'react';
