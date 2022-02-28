@@ -1,13 +1,15 @@
 import "../styles/globals.css";
 import type { AppProps } from "next/app";
-import { MantineProvider } from "@mantine/core";
+
+import { useEffect } from "react";
+import { setTheme } from "../shared/services/theme";
 
 function MyApp({ Component, pageProps }: AppProps) {
-  return (
-    <MantineProvider>
-      <Component {...pageProps} />;
-    </MantineProvider>
-  );
+  useEffect(() => {
+    setTheme();
+  });
+
+  return <Component {...pageProps} />;
 }
 
 export default MyApp;

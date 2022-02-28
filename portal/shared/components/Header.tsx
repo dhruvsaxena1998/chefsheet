@@ -1,27 +1,23 @@
-import { Box, Text } from "@mantine/core";
+import Link from "next/link";
+import { RiLogoutCircleRLine } from "@react-icons/all-files/ri/RiLogoutCircleRLine";
 
 interface IHeaderProps {
   title: string;
 }
 
-export default function AppHeader(props: IHeaderProps) {
+export default function AppHeader({ title }: IHeaderProps) {
   return (
-    <Box sx={{ m: 2 }}>
-      <header>
-        <Text
-          component="span"
-          variant="gradient"
-          gradient={{ from: "indigo", to: "cyan", deg: 45 }}
-          size="xl"
-          weight={700}
-          style={{
-            fontFamily: "Greycliff CF, sans-serif",
-            textTransform: "uppercase",
-          }}
-        >
-          {props.title}
-        </Text>
-      </header>
-    </Box>
+    <div className="navbar bg-base-100">
+      <div className="navbar-start">
+        <a className="btn btn-ghost normal-case text-xl">{title}</a>
+      </div>
+      <div className="navbar-end">
+        <Link href="/logout" passHref>
+          <span className="btn gap-2 btn-error text-white">
+            <RiLogoutCircleRLine size={18} /> Logout
+          </span>
+        </Link>
+      </div>
+    </div>
   );
 }
