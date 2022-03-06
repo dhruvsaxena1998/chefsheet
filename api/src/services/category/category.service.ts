@@ -6,6 +6,8 @@ import { CategoryRepository } from './category.repository';
 
 import { AddCategoryDTO, QSParams, UpdateCategoryDTO } from './dto';
 
+import { slugify } from '../../utils/slugify';
+
 @Injectable()
 export class CategoryService {
   constructor(
@@ -35,7 +37,11 @@ export class CategoryService {
   }
 
   create(dto: AddCategoryDTO): CategoryEntity {
-    return this.categoryRepository.create(dto);
+    const data: AddCategoryDTO = {
+      name: dto.name,
+      code: slugify(dto.name),
+    };
+    return this.categoryRepository.create(data);
   }
 
   async insert(dto: AddCategoryDTO): Promise<CategoryEntity> {
@@ -65,6 +71,10 @@ export class CategoryService {
 
   count(queryParams?: QSParams): Promise<number> {
     if (queryParams) {
+      if (queryParams.code) {
+        queryParams.code = slugify(queryParams.code);
+      }
+
       return this.categoryRepository.count({
         deleted: false,
         ...queryParams,
