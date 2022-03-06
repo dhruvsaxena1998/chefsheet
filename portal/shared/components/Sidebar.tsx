@@ -1,43 +1,44 @@
 import { useState } from "react";
+import { useRouter } from "next/router";
 
-import { IconType } from "@react-icons/all-files/lib";
-
-import { BsSearch } from "@react-icons/all-files/bs/BsSearch";
-import { MdEvent } from "@react-icons/all-files/md/MdEvent";
-import { FiUsers } from "@react-icons/all-files/fi/FiUsers";
-import { FaUsers } from "@react-icons/all-files/fa/FaUsers";
-
-type SideBarSlug =
-  | "home"
-  | "search"
-  | "events"
-  | "users"
-  | "inventory"
-  | "settings"
-  | "logout"
-  | "staff"
-  | "clients";
+import { IconType } from "react-icons";
+import { BiCategory, BiCategoryAlt, BiSearchAlt } from "react-icons/bi";
+import { SideBarItems } from "../../types";
+import clsx from "clsx";
 
 type SideBar = {
   name: string;
-  slug: SideBarSlug;
+  slug: SideBarItems;
   icon: IconType;
 };
 
 const sideBarData: SideBar[] = [
-  { name: "Search", slug: "search", icon: BsSearch },
-  { name: "Inventory", slug: "inventory", icon: MdEvent },
-  { name: "Events", slug: "events", icon: MdEvent },
-  { name: "Staff", slug: "staff", icon: FiUsers },
-  { name: "Clients", slug: "clients", icon: FaUsers },
-  { name: "Settings", slug: "settings", icon: MdEvent },
+  { name: "Search", slug: "search", icon: BiSearchAlt },
+  { name: "Categories", slug: "category", icon: BiCategory },
+  { name: "Sub-Categories", slug: "sub-category", icon: BiCategoryAlt },
 ];
 
 function Sidebar() {
+  const router = useRouter();
+  const [active, setActive] = useState<SideBarItems>(
+    router.asPath.split("/")[1] as SideBarItems
+  );
+
+  const handleItemClick = (slug: SideBarItems) => {
+    setActive(slug);
+    router.push(`/${slug}`);
+  };
+
   return (
-    <ul className="menu bg-base-300 w-56 p-2 rounded-box">
+    <ul className="menu bg-base-300 w-56 h-full p-2 rounded-box">
       {sideBarData.map(({ slug, icon: Icon, name }: SideBar) => (
-        <li key={slug}>
+        <li
+          key={slug}
+          onClick={() => handleItemClick(slug)}
+          className={clsx("my-1", [
+            active === slug && "bg-base-100 rounded-lg",
+          ])}
+        >
           <div className="flex items-center gap-2">
             <Icon />
             {name}
