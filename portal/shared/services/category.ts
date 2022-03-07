@@ -12,3 +12,25 @@ export const getCategoriesCount = (code: string) => {
 export const createCategory = (category: ICategory) => {
   return API.post("/categories", category);
 };
+
+export const getCategories = () => {
+  return API.get("/categories");
+};
+
+export const getCategoryById = (id: string) => {
+  return API.get(`/categories/${id}`);
+};
+
+export const updateCategory = ({
+  id,
+  category,
+}: {
+  id: string;
+  category: Pick<ICategory, "name">;
+}) => {
+  return API.put(`/categories/${id}`, category);
+};
+
+export const deleteCategory = (id: string) => {
+  return API.delete(`/categories/${id}`);
+};
