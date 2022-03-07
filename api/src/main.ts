@@ -5,6 +5,7 @@ import { AppModule } from './app/app.module';
 
 import { SwaggerModule } from '@nestjs/swagger';
 import { documentConfig } from './swagger.config';
+import * as morgan from 'morgan';
 
 const port = 5000;
 async function bootstrap() {
@@ -12,6 +13,8 @@ async function bootstrap() {
   app.setGlobalPrefix('/api');
 
   app.enableCors();
+
+  app.use(morgan('tiny'));
 
   // use validation pipe for all requests
   app.useGlobalPipes(new ValidationPipe());
