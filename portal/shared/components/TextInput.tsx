@@ -1,5 +1,6 @@
 import clsx from "clsx";
 import { ErrorMessage, Field } from "formik";
+import { PropsWithChildren, ReactNode } from "react";
 
 export interface ITextInputProps {
   classes?: {
@@ -11,18 +12,19 @@ export interface ITextInputProps {
   };
   label?: string;
   name: string;
-  type?: "text" | "password" | "email" | "number" | "tel" | "url";
+  type?: "text" | "password" | "email" | "number" | "select";
   placeholder?: string;
   validate?: (value: string) => string | undefined;
 }
 
-export default function TextInput(props: ITextInputProps) {
+export default function TextInput(props: PropsWithChildren<ITextInputProps>) {
   const {
     name,
     classes = {},
     label = "",
     type = "text",
     placeholder = "",
+    children,
   } = props;
 
   return (
@@ -34,14 +36,26 @@ export default function TextInput(props: ITextInputProps) {
           </span>
         </label>
       )}
-      <Field
-        id={name}
-        name={name}
-        type={type}
-        placeholder={placeholder}
-        className={clsx(["input", "input-bordered", classes?.input])}
-        validate={props.validate}
-      />
+      {type === "select" ? (
+        <Field
+          id={name}
+          name={name}
+          as="select"
+          className={clsx(["input", "input-bordered", classes?.input])}
+          validate={props.validate}
+        >
+          {children}
+        </Field>
+      ) : (
+        <Field
+          id={name}
+          name={name}
+          type={type}
+          placeholder={placeholder}
+          className={clsx(["input", "input-bordered", classes?.input])}
+          validate={props.validate}
+        />
+      )}
       <ErrorMessage
         name={name}
         component="div"

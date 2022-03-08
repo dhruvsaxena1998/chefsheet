@@ -10,7 +10,10 @@ import Loader from "../../shared/components/Loader";
 import SearchBar from "../../shared/components/SearchBar";
 import Table from "../../shared/components/Table";
 
-import { deleteCategory, getCategories } from "../../shared/services/category";
+import {
+  deleteSubCategory,
+  getSubCategories,
+} from "../../shared/services/sub-category";
 
 const columns = [
   {
@@ -21,15 +24,21 @@ const columns = [
     Header: "Code",
     accessor: "code",
   },
+  {
+    Header: "Category",
+    accessor: "category",
+  },
 ];
 
-const Category: NextPage = () => {
-  const query = useQuery("categories", getCategories, {
-    cacheTime: 0,
+const SubCategory: NextPage = () => {
+  const query = useQuery("sub-categories", getSubCategories, {
+    cacheTime: 10,
   });
 
-  const deleteMutation = useMutation((id: string) => deleteCategory(id), {
-    onSuccess: () => query.refetch(),
+  const deleteMutation = useMutation((id: string) => deleteSubCategory(id), {
+    onSuccess: () => {
+      query.refetch();
+    },
   });
 
   const router = useRouter();
@@ -38,24 +47,24 @@ const Category: NextPage = () => {
     <DefaultLayout>
       <>
         <Head>
-          <title>Cheffsheet - Categories</title>
+          <title>Cheffsheet - Sub Categories</title>
         </Head>
 
         <main className="mb-4">
-          <SearchBar slug="category" />
+          <SearchBar slug="sub-category" />
 
           <div className="divider"></div>
 
           <div className="prose my-4">
-            <h1>Categories</h1>
+            <h1>Sub - Categories</h1>
           </div>
+
           {deleteMutation.isError && (
             <div
               className="alert alert-error text-white font-bold my-4"
               onClick={() => deleteMutation.reset()}
             >
-              Error while deleting, Please make sure no sub-categories are
-              attached to this category.
+              Error while deleting.
             </div>
           )}
 
@@ -71,7 +80,7 @@ const Category: NextPage = () => {
                 }}
                 actions={["edit", "delete"]}
                 onEdit={(id) => {
-                  router.push(`/category/${id}`);
+                  router.push(`/sub-category/${id}`);
                 }}
                 onDelete={(id) => {
                   deleteMutation.mutate(id);
@@ -81,7 +90,7 @@ const Category: NextPage = () => {
           </div>
 
           <div className="flex justify-end">
-            <Link href="/category/create" passHref>
+            <Link href="/sub-category/create" passHref>
               <div className="btn btn-wide bg-indigo-500 my-4">Create</div>
             </Link>
           </div>
@@ -91,4 +100,4 @@ const Category: NextPage = () => {
   );
 };
 
-export default Category;
+export default SubCategory;

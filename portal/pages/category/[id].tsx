@@ -32,7 +32,7 @@ const EditCategory: NextPage = () => {
   } = useQuery(
     [`category-${id}`, id],
     () => (id ? getCategoryById(id) : null),
-    { cacheTime: 0 }
+    { cacheTime: 0, refetchOnWindowFocus: false }
   );
   const category = categoryItem?.data as Category;
 
@@ -51,7 +51,6 @@ const EditCategory: NextPage = () => {
           name: values.name,
         },
       });
-      console.log(values);
     } catch (e) {
       console.error(e);
     }
