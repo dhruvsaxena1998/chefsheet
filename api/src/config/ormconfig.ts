@@ -1,4 +1,3 @@
-import { SqliteConnectionOptions } from 'typeorm/driver/sqlite/SqliteConnectionOptions';
 import { MysqlConnectionOptions } from 'typeorm/driver/mysql/MysqlConnectionOptions';
 const config: MysqlConnectionOptions = {
   type: 'mysql',

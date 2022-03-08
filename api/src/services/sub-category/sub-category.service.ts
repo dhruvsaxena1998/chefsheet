@@ -1,31 +1,37 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { InjectKnex, Knex } from 'nestjs-knex';
 import { AddSubCategoryDTO, QSParams, UpdateSubCategoryDTO } from './dto';
 
 import { SubCategoryEntity } from './sub-category.entity';
 import { SubCategoryRepository } from './sub-category.repository';
+
+import { slugify } from '../../utils/slugify';
 
 @Injectable()
 export class SubCategoryService {
   constructor(
     @InjectRepository(SubCategoryRepository)
     private readonly subCategoryRepository: SubCategoryRepository,
+    @InjectKnex() private readonly knex: Knex,
   ) {}
 
   find(queryParams?: QSParams): Promise<SubCategoryEntity[]> {
-    let whereClause = { deleted: false };
+    let whereClause = { 'sub_categories.deleted': false };
+
+    const query = this.knex
+      .table('sub_categories')
+      .select(['sub_categories.id', 'sub_categories.name', 'sub_categories.code', 'categories.name as category'])
+      .where(whereClause)
+      .leftJoin('categories', 'sub_categories.category_id', 'categories.id');
 
     if (queryParams) {
-      whereClause = {
-        ...whereClause,
-        ...queryParams,
-      };
+      Object.entries(queryParams).forEach(([key, value]) => {
+        query.whereILike(`sub_categories.${key}`, `%${value}%`);
+      });
     }
 
-    return this.subCategoryRepository.find({
-      loadRelationIds: true,
-      where: whereClause,
-    });
+    return query as unknown as Promise<SubCategoryEntity[]>;
   }
 
   async findOne(id: string): Promise<SubCategoryEntity> {
@@ -47,7 +53,12 @@ export class SubCategoryService {
   }
 
   create(dto: AddSubCategoryDTO): SubCategoryEntity {
-    return this.subCategoryRepository.create(dto);
+    const data: AddSubCategoryDTO = {
+      name: dto.name,
+      category: dto.category,
+      code: slugify(dto.name),
+    };
+    return this.subCategoryRepository.create(data);
   }
 
   async insert(dto: AddSubCategoryDTO): Promise<SubCategoryEntity> {
@@ -63,13 +74,23 @@ export class SubCategoryService {
   }
 
   async delete(id: string): Promise<SubCategoryEntity> {
-    const entity = await this.findOne(id);
-    this.subCategoryRepository.delete(entity.id);
+    try {
+      const entity = await this.findOne(id);
+      await this.subCategoryRepository.delete(entity.id);
 
-    return entity;
+      return entity;
+    } catch (e) {
+      throw new BadRequestException();
+    }
   }
 
   count(queryParams?: QSParams): Promise<number> {
+    if (queryParams) {
+      if (queryParams.code) {
+        queryParams.code = slugify(queryParams.code)
+      }
+    }
+
     let whereClause = { deleted: false };
 
     if (queryParams) {

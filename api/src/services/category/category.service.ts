@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { CategoryEntity } from './category.entity';
@@ -63,10 +63,13 @@ export class CategoryService {
   }
 
   async delete(id: string): Promise<CategoryEntity> {
-    const entity = await this.findOne(id);
-    this.categoryRepository.delete(entity.id);
-
-    return entity;
+    try {
+      const entity = await this.findOne(id);
+      await this.categoryRepository.delete(entity.id);
+      return entity;
+    } catch (e) {
+      throw new BadRequestException();
+    }
   }
 
   count(queryParams?: QSParams): Promise<number> {

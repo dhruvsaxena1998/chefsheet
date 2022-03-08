@@ -14,7 +14,9 @@ export class CategoryEntity extends SharedEntity {
   @Column({ unique: true })
   code: string;
 
-  @OneToMany(() => SubCategoryEntity, (subCategory) => subCategory.category)
+  @OneToMany(() => SubCategoryEntity, (subCategory) => subCategory.category, {
+    onDelete: 'SET NULL',
+  })
   @JoinTable()
   subCategories: SubCategoryEntity[];
 }
