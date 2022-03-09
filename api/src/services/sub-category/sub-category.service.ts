@@ -7,6 +7,7 @@ import { SubCategoryEntity } from './sub-category.entity';
 import { SubCategoryRepository } from './sub-category.repository';
 
 import { slugify } from '../../utils/slugify';
+import { merge } from 'lodash';
 
 @Injectable()
 export class SubCategoryService {
@@ -35,14 +36,16 @@ export class SubCategoryService {
   }
 
   async findOne(id: string): Promise<SubCategoryEntity> {
-    const entity = await this.subCategoryRepository.findOne(id, {
-      loadRelationIds: true,
-      where: { deleted: false },
-    });
+    const entity = await this.knex
+      .table('sub_categories')
+      .select(['sub_categories.id', 'sub_categories.name', 'sub_categories.code', 'categories.name as category'])
+      .where({ 'sub_categories.deleted': false, 'sub_categories.id': id })
+      .leftJoin('categories', 'sub_categories.category_id', 'categories.id')
+      .first();
 
     if (!entity) throw new NotFoundException();
 
-    return entity;
+    return entity as unknown as Promise<SubCategoryEntity>;
   }
 
   async findAllByCategory(category: string): Promise<SubCategoryEntity[]> {
@@ -67,10 +70,12 @@ export class SubCategoryService {
   }
 
   async update(id: string, dto: UpdateSubCategoryDTO): Promise<SubCategoryEntity> {
-    let entity = await this.findOne(id);
-    entity = this.subCategoryRepository.merge(entity, dto);
-    this.subCategoryRepository.update(id, entity);
-    return entity;
+    const entity = await this.findOne(id);
+
+    if (!entity) throw new BadRequestException();
+
+    await this.knex.update(dto).table('sub_categories').where({ id });
+    return merge({}, entity, dto);
   }
 
   async delete(id: string): Promise<SubCategoryEntity> {
@@ -87,7 +92,7 @@ export class SubCategoryService {
   count(queryParams?: QSParams): Promise<number> {
     if (queryParams) {
       if (queryParams.code) {
-        queryParams.code = slugify(queryParams.code)
+        queryParams.code = slugify(queryParams.code);
       }
     }
 
