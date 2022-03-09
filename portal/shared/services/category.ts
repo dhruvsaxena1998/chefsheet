@@ -5,12 +5,12 @@ export interface ICategory {
   code: string;
 }
 
-export const getCategoriesCount = (code: string) => {
-  return API.get(`/categories/count?code=${code}`);
-};
-
 export const createCategory = (category: ICategory) => {
   return API.post("/categories", category);
+};
+
+export const getCategoriesCount = (code: string) => {
+  return API.get(`/categories/count?code=${code}`);
 };
 
 export const getCategories = () => {

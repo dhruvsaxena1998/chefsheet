@@ -62,7 +62,6 @@ const CreateSubCategory: NextPage = () => {
   const handleOnSubmit = async (values: ISubCategory) => {
     try {
       createSubCategoryMutation(values);
-      console.log(values);
     } catch (e) {
       console.error(e);
     }

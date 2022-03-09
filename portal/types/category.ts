@@ -6,3 +6,10 @@ export interface Category {
   name: string;
   updatedAt: string;
 }
+
+export interface SubCategory {
+  code: string;
+  id: string;
+  name: string;
+  category: string;
+}
