@@ -1,0 +1,55 @@
+{
+  "kind": "collectionType",
+  "collectionName": "staff_members",
+  "info": {
+    "singularName": "staff-member",
+    "pluralName": "staff-members",
+    "displayName": "Staff Members",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "contact_number": {
+      "type": "string"
+    },
+    "country_code": {
+      "type": "string",
+      "default": "+91",
+      "required": false,
+      "maxLength": 4
+    },
+    "code": {
+      "type": "uid",
+      "targetField": "name"
+    },
+    "role": {
+      "type": "enumeration",
+      "enum": [
+        "employee",
+        "manager",
+        "contract"
+      ],
+      "default": "employee"
+    },
+    "manager": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "staff_members"
+    },
+    "access": {
+      "type": "json"
+    },
+    "address": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.address"
+    }
+  }
+}

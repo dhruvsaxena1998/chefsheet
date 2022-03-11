@@ -1,0 +1,31 @@
+{
+  "collectionName": "components_shared_addresses",
+  "info": {
+    "displayName": "Address",
+    "icon": "address-card"
+  },
+  "options": {},
+  "attributes": {
+    "state": {
+      "type": "string"
+    },
+    "city": {
+      "type": "string"
+    },
+    "country": {
+      "type": "string"
+    },
+    "plot_no": {
+      "type": "string"
+    },
+    "line_1": {
+      "type": "string"
+    },
+    "line_2": {
+      "type": "string"
+    },
+    "postal_code": {
+      "type": "biginteger"
+    }
+  }
+}
