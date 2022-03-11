@@ -11,6 +11,10 @@ const options: IOptions[] = [
     value: "sub-category",
     label: "Sub-Categories",
   },
+  {
+    value: "staff",
+    label: "Staff",
+  },
 ];
 
 interface SearchBarProps {
