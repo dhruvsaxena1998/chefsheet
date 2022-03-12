@@ -19,7 +19,7 @@
       "type": "text"
     },
     "quantity": {
-      "type": "biginteger"
+      "type": "integer"
     },
     "expiration_date": {
       "type": "date"
