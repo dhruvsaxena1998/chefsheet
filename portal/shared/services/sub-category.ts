@@ -1,37 +1,45 @@
+import { ISubCategory, IApiResponse } from "@types";
 import { API } from "../../utils/axios";
 
-export interface ISubCategory {
+const find = async (
+  query?: Record<string, unknown>
+): Promise<IApiResponse<ISubCategory>> => {
+  const { data, status } = await API({
+    url: "/sub-categories",
+    method: "get",
+    query,
+  });
+
+  return {
+    data,
+    status,
+  };
+};
+
+export interface CreateSubCategoryDTO {
   name: string;
   code: string;
-  category: string;
+  category: string | number;
 }
 
-export const getSubCategories = () => {
-  return API.get("/sub-categories");
+const create = async (
+  payload: CreateSubCategoryDTO
+): Promise<IApiResponse<ISubCategory>> => {
+  const body = {
+    ...payload,
+    settings: {
+      created_by: "user",
+      updated_by: "user",
+    },
+  };
+
+  const { data, status } = await API({
+    url: "/sub-categories",
+    method: "post",
+    body,
+  });
+
+  return { data, status };
 };
 
-export const getSubCategoriesCount = (code: string) => {
-  return API.get(`/sub-categories/count?code=${code}`);
-};
-
-export const getSubCategoryById = (id: string) => {
-  return API.get(`/sub-categories/${id}`);
-};
-
-export const createSubCategory = (subCategory: ISubCategory) => {
-  return API.post("/sub-categories", subCategory);
-};
-
-export const updateSubCategory = ({
-  id,
-  subcategory,
-}: {
-  id: string;
-  subcategory: Pick<ISubCategory, "name">;
-}) => {
-  return API.put(`/sub-categories/${id}`, subcategory);
-};
-
-export const deleteSubCategory = (id: string) => {
-  return API.delete(`/sub-categories/${id}`);
-};
+export const SubCategoryService = { find, create };

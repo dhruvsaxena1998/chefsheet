@@ -20,7 +20,7 @@ export interface ITableProps {
   onClick?: (row: Row) => void;
 }
 
-export default function Table(props: ITableProps) {
+export const Table = (props: ITableProps) => {
   const { classes = {} } = props;
 
   const columns = useMemo(() => props.columns, [props.columns]);
@@ -28,13 +28,13 @@ export default function Table(props: ITableProps) {
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable({ columns, data: props.data });
 
-  const handleOnActionClick = (id: string, action: Actions) => {
+  const handleOnActionClick = (row: any, action: Actions) => {
     switch (action) {
       case "edit":
-        props.onEdit && props.onEdit(id);
+        props.onEdit && props.onEdit(row);
         break;
       case "delete":
-        props.onDelete && props.onDelete(id);
+        props.onDelete && props.onDelete(row);
         break;
     }
   };
@@ -95,7 +95,7 @@ export default function Table(props: ITableProps) {
                       <button
                         key={`tbody-action-${index}`}
                         onClick={() =>
-                          handleOnActionClick(row.original.id, action)
+                          handleOnActionClick(row.original, action)
                         }
                         className={clsx(["btn btn-xs", actionBtnClsx(action)])}
                       >
@@ -111,4 +111,6 @@ export default function Table(props: ITableProps) {
       </table>
     </div>
   );
-}
+};
+
+export default Table;

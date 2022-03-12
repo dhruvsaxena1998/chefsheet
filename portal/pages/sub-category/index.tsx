@@ -1,19 +1,13 @@
-import type { NextPage } from "next";
+import { useMemo } from "react";
 import Head from "next/head";
 import Link from "next/link";
-import { useRouter } from "next/router";
 
-import { useMutation, useQuery } from "react-query";
+import { IErrors, IMeta, ISubCategory } from "@types";
+import { GetServerSideProps, NextPage } from "next";
 
 import DefaultLayout from "../../layouts/DefaultLayout";
-import Loader from "../../shared/components/Loader";
-import SearchBar from "../../shared/components/SearchBar";
-import Table from "../../shared/components/Table";
-
-import {
-  deleteSubCategory,
-  getSubCategories,
-} from "../../shared/services/sub-category";
+import { Table, SearchBar } from "@shared/components";
+import { SubCategoryService } from "@shared/services";
 
 const columns = [
   {
@@ -30,18 +24,37 @@ const columns = [
   },
 ];
 
-const SubCategory: NextPage = () => {
-  const query = useQuery("sub-categories", getSubCategories, {
-    cacheTime: 10,
-  });
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  try {
+    const { data } = await SubCategoryService.find({
+      populate: ["category"],
+    });
 
-  const deleteMutation = useMutation((id: string) => deleteSubCategory(id), {
-    onSuccess: () => {
-      query.refetch();
-    },
-  });
+    const { data: subCategories, meta } = data;
 
-  const router = useRouter();
+    return {
+      props: { subCategories, meta },
+    };
+  } catch (e) {
+    return { props: { subCategories: [] } };
+  }
+};
+
+const SubCategory: NextPage<{
+  subCategories: ISubCategory[];
+  meta: IMeta;
+  error?: IErrors;
+}> = (props) => {
+  const rows = useMemo(
+    () =>
+      props.subCategories.map(({ id, code, name, category }) => ({
+        id,
+        code,
+        name,
+        category: category?.data?.name || "",
+      })),
+    [props.subCategories]
+  );
 
   return (
     <DefaultLayout>
@@ -59,34 +72,19 @@ const SubCategory: NextPage = () => {
             <h1>Sub - Categories</h1>
           </div>
 
-          {deleteMutation.isError && (
-            <div
-              className="alert alert-error text-white font-bold my-4"
-              onClick={() => deleteMutation.reset()}
-            >
-              Error while deleting.
-            </div>
-          )}
-
           <div className="overflow-x-auto bg-base-300 rounded-lg">
-            {query.isLoading ? (
-              <Loader />
-            ) : (
-              <Table
-                columns={columns}
-                data={query.data?.data || []}
-                classes={{
-                  table: "table w-full",
-                }}
-                actions={["edit", "delete"]}
-                onEdit={(id) => {
-                  router.push(`/sub-category/${id}`);
-                }}
-                onDelete={(id) => {
-                  deleteMutation.mutate(id);
-                }}
-              />
-            )}
+            <Table
+              columns={columns}
+              data={rows}
+              classes={{
+                table: "table w-full",
+              }}
+              actions={["edit"]}
+              onEdit={(row) => {
+                console.log({ row });
+                // router.push(`/sub-category/${id}`);
+              }}
+            />
           </div>
 
           <div className="flex justify-end">

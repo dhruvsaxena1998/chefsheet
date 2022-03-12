@@ -1,15 +1,22 @@
-export interface Category {
-  code: string;
-  createdAt: string;
-  deleted: boolean;
+export interface ICategory {
   id: string;
   name: string;
-  updatedAt: string;
+  code: string;
+  createdAt: Date;
+  updatedAt: Date;
+  publishedAt: Date;
+  settings: Record<string, unknown>;
 }
 
-export interface SubCategory {
-  code: string;
-  id: string;
+export interface ISubCategory {
+  id: number;
   name: string;
-  category: string;
+  code: string;
+  createdAt: Date;
+  updatedAt: Date;
+  publishedAt: Date;
+  category: {
+    data: ICategory;
+  }; // ICategory;
+  settings: Record<string, unknown>;
 }

@@ -9,15 +9,18 @@ export interface ITextInputProps {
     labelText?: string;
     input?: string;
     error?: string;
+    hint?: string;
   };
   label?: string;
   name: string;
   type?: "text" | "password" | "email" | "number" | "select";
+  hint?: string;
   placeholder?: string;
+  defaultValue?: string;
   validate?: (value: string) => string | undefined;
 }
 
-export default function TextInput(props: PropsWithChildren<ITextInputProps>) {
+export const TextInput = (props: PropsWithChildren<ITextInputProps>) => {
   const {
     name,
     classes = {},
@@ -25,6 +28,7 @@ export default function TextInput(props: PropsWithChildren<ITextInputProps>) {
     type = "text",
     placeholder = "",
     children,
+    hint,
   } = props;
 
   return (
@@ -56,6 +60,13 @@ export default function TextInput(props: PropsWithChildren<ITextInputProps>) {
           validate={props.validate}
         />
       )}
+      {hint && (
+        <span
+          className={clsx(["mt-1 ml-2 text-slate-300 text-sm", classes?.hint])}
+        >
+          {hint}
+        </span>
+      )}
       <ErrorMessage
         name={name}
         component="div"
@@ -63,4 +74,6 @@ export default function TextInput(props: PropsWithChildren<ITextInputProps>) {
       />
     </div>
   );
-}
+};
+
+export default TextInput;

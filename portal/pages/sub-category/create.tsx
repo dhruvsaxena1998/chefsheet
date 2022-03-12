@@ -1,69 +1,67 @@
-import type { NextPage } from "next";
+import type { GetServerSideProps, NextPage } from "next";
 import clsx from "clsx";
 import Head from "next/head";
-import { useMutation, useQuery } from "react-query";
-import * as Yup from "yup";
 
-import { Formik, Form, FormikHelpers, Field } from "formik";
+import * as Yup from "yup";
+import { Formik, Form } from "formik";
+import { toast } from "react-toastify";
+
+import { ICategory, IErrors, IMeta } from "@types";
+import { TextInput } from "@shared/components";
+import {
+  SubCategoryService,
+  CreateSubCategoryDTO,
+  CategoryService,
+} from "@shared/services";
 
 import DefaultLayout from "../../layouts/DefaultLayout";
-import TextInput from "../../shared/components/TextInput";
-import { getCategories } from "../../shared/services/category";
-import {
-  ISubCategory,
-  createSubCategory,
-  getSubCategoriesCount,
-} from "../../shared/services/sub-category";
-import { Category } from "../../types/category";
-
-const initialValues: ISubCategory = {
-  name: "",
-  code: "",
-  category: "",
-};
 
 const ValidationSchema = Yup.object().shape({
   name: Yup.string().required("Name is required"),
-  code: Yup.string()
-    .required("Code is required")
-    .test(
-      "unique",
-      "Code is already taken",
-      (value) =>
-        new Promise((resolve) => {
-          if (!value) return resolve(false);
-
-          getSubCategoriesCount(value).then(({ data: { count } }) => {
-            return resolve(count === 0);
-          });
-        })
-    ),
+  code: Yup.string().required("Code is required"),
   category: Yup.string()
     .required("Category is required")
-    .test("not-null", "Category is required", (value) => {
-      if (!value) return false;
-      if (value === "null") return false;
-      return true;
-    }),
+    .test("invalid", "Category is invalid", (value) => value !== "null"),
 });
 
-const CreateSubCategory: NextPage = () => {
-  const categories = useQuery("categories", getCategories, {
-    refetchOnWindowFocus: false,
-  });
+export const getServerSideProps: GetServerSideProps = async () => {
+  try {
+    const { data } = await CategoryService.find({
+      pagination: {
+        start: 0,
+        limit: 100,
+      },
+    });
 
-  const {
-    mutate: createSubCategoryMutation,
-    isLoading: addSubCategoryIsLoading,
-    isError: addSubCategoryIsError,
-    isSuccess: addSubCategoryIsSuccess,
-  } = useMutation(createSubCategory);
+    const { data: categories, meta } = data;
 
-  const handleOnSubmit = async (values: ISubCategory) => {
+    return {
+      props: {
+        categories,
+        meta,
+      },
+    };
+  } catch (e) {
+    return { props: { data: [] } };
+  }
+};
+
+const CreateSubCategory: NextPage<{
+  categories: ICategory[];
+  meta: IMeta;
+  error?: IErrors;
+}> = (props) => {
+  const handleOnSubmit = async (values: CreateSubCategoryDTO) => {
     try {
-      createSubCategoryMutation(values);
+      await SubCategoryService.create(values);
+      toast.success("Sub-Category created successfully");
     } catch (e) {
-      console.error(e);
+      const error = e as any;
+      const { data, status } = error?.response || {};
+      if (status === 400) {
+        const { message } = data?.error as IErrors;
+        toast.error(message);
+      }
     }
   };
 
@@ -79,24 +77,12 @@ const CreateSubCategory: NextPage = () => {
         </div>
 
         <main className="my-4 p-4">
-          {(addSubCategoryIsError || addSubCategoryIsSuccess) && (
-            <div
-              className={clsx([
-                "alert my-4",
-                {
-                  "alert-success": addSubCategoryIsSuccess,
-                  "alert-danger": addSubCategoryIsError,
-                },
-              ])}
-            >
-              <span>
-                {addSubCategoryIsSuccess && "Category created successfully"}
-                {addSubCategoryIsError && "Error creating category"}
-              </span>
-            </div>
-          )}
           <Formik
-            initialValues={initialValues}
+            initialValues={{
+              name: "",
+              code: "",
+              category: "null",
+            }}
             onSubmit={handleOnSubmit}
             validationSchema={ValidationSchema}
             validateOnBlur={true}
@@ -116,6 +102,7 @@ const CreateSubCategory: NextPage = () => {
 
                 <TextInput
                   label="Code"
+                  hint="This should be unique"
                   name="code"
                   placeholder="e.g. Res-1"
                   classes={{
@@ -133,12 +120,11 @@ const CreateSubCategory: NextPage = () => {
                 >
                   <>
                     <option value="null">Please select category</option>
-                    {categories.isSuccess &&
-                      categories.data.data.map((category: Category) => (
-                        <option key={category.id} value={category.id}>
-                          {category.name}
-                        </option>
-                      ))}
+                    {props.categories.map(({ id, name }) => (
+                      <option key={id} value={id}>
+                        {name}
+                      </option>
+                    ))}
                   </>
                 </TextInput>
 
@@ -147,17 +133,8 @@ const CreateSubCategory: NextPage = () => {
                   className={clsx([
                     "my-4 btn w-full max-w-sm",
                     { "bg-primary": isValid },
-                    {
-                      loading:
-                        isValidating || isSubmitting || addSubCategoryIsLoading,
-                    },
-                    {
-                      disabled:
-                        !isValid ||
-                        isValidating ||
-                        isSubmitting ||
-                        addSubCategoryIsLoading,
-                    },
+                    { loading: isValidating || isSubmitting },
+                    { disabled: !isValid || isValidating || isSubmitting },
                   ])}
                 >
                   Create

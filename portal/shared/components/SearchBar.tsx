@@ -1,6 +1,6 @@
 import { SearchOptions } from "../../types";
 
-type IOptions = {
+export type IOptions = {
   value: SearchOptions;
   label: string;
 };
@@ -17,11 +17,11 @@ const options: IOptions[] = [
   },
 ];
 
-interface SearchBarProps {
+export interface SearchBarProps {
   slug?: SearchOptions;
 }
 
-export default function SearchBar({ slug = "all" }: SearchBarProps) {
+export const SearchBar = ({ slug = "all" }: SearchBarProps) => {
   return (
     <div className="form-control">
       <div className="input-group">
@@ -54,4 +54,6 @@ export default function SearchBar({ slug = "all" }: SearchBarProps) {
       </div>
     </div>
   );
-}
+};
+
+export default SearchBar;

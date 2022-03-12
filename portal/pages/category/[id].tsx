@@ -15,7 +15,7 @@ import {
 } from "../../shared/services/category";
 import { useRouter } from "next/router";
 import Loader from "../../shared/components/Loader";
-import { Category } from "../../types/category";
+import { ICategory } from "../../types/category";
 
 const ValidationSchema = Yup.object().shape({
   name: Yup.string().required("Name is required"),
@@ -34,7 +34,7 @@ const EditCategory: NextPage = () => {
     () => (id ? getCategoryById(id) : null),
     { cacheTime: 0, refetchOnWindowFocus: false }
   );
-  const category = categoryItem?.data as Category;
+  const category = categoryItem?.data as ICategory;
 
   const {
     mutate: updateCategoryMutation,
