@@ -7,6 +7,7 @@ type Actions = "edit" | "delete";
 export interface ITableProps {
   data: any[];
   columns: any[];
+  index: boolean;
   classes?: {
     table?: string;
     actionBtn?: {
@@ -15,9 +16,9 @@ export interface ITableProps {
     };
   };
   actions?: Actions[];
-  onEdit?: (id: string) => void;
-  onDelete?: (id: string) => void;
-  onClick?: (row: Row) => void;
+  onEdit?: (row: any) => void;
+  onDelete?: (row: any) => void;
+  onClick?: (row: any) => void;
 }
 
 export const Table = (props: ITableProps) => {
@@ -53,11 +54,12 @@ export const Table = (props: ITableProps) => {
   };
 
   return (
-    <div>
+    <div className="h-full max-h-1/2">
       <table {...getTableProps()} className={clsx([classes?.table])}>
         <thead>
           {headerGroups.map((headerGroup, index) => (
             <tr {...headerGroup.getHeaderGroupProps()} key={`thead-${index}`}>
+              {props.index && <th key={`thead-index-${index}`}></th>}
               {headerGroup.headers.map((column) => (
                 <th {...column.getHeaderProps()} key={column.id}>
                   {column.render("Header")}
@@ -81,6 +83,9 @@ export const Table = (props: ITableProps) => {
                 onClick={() => handleOnClick(row)}
                 className={clsx([{ "cursor-pointer": props.onClick }])}
               >
+                {props.index && (
+                  <td key={`tbody-cell-${index}-index`}>{index + 1}</td>
+                )}
                 {row.cells.map((cell, index) => (
                   <td
                     {...cell.getCellProps()}

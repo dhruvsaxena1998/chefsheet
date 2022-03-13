@@ -18,8 +18,10 @@
     "paths": {
       "@shared/components": ["./shared/components"],
       "@shared/services": ["./shared/services"],
+      "@shared/hooks": ["./shared/hooks"],
       "@types": ["./types"],
       "@types/*": ["./types/*"],
+      "@utils/*": ["./utils/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],

@@ -1,11 +1,11 @@
 import { SearchOptions } from "../../types";
 
-export type IOptions = {
+export type ISearchBarOptions = {
   value: SearchOptions;
   label: string;
 };
 
-const options: IOptions[] = [
+const options: ISearchBarOptions[] = [
   { value: "category", label: "Categories" },
   {
     value: "sub-category",
@@ -17,11 +17,11 @@ const options: IOptions[] = [
   },
 ];
 
-export interface SearchBarProps {
+export interface ISearchBarProps {
   slug?: SearchOptions;
 }
 
-export const SearchBar = ({ slug = "all" }: SearchBarProps) => {
+export const SearchBar = ({ slug = "all" }: ISearchBarProps) => {
   return (
     <div className="form-control">
       <div className="input-group">
@@ -48,7 +48,7 @@ export const SearchBar = ({ slug = "all" }: SearchBarProps) => {
           placeholder={"Search here"}
           className={"input bg-base-300 w-full rounded-lg"}
         />
-        <button className="btn btn-wide bg-base-200 tracking-wider">
+        <button className="btn btn-wide bg-base-200 tracking-wider border-0">
           Search
         </button>
       </div>

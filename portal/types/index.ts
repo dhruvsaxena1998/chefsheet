@@ -4,6 +4,7 @@ export type SideBarItems =
   | "category"
   | "sub-category"
   | "staff";
+
 export type SearchOptions = "all" | "category" | "sub-category" | "staff";
 
 export interface Pagination {

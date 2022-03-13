@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { RiLogoutCircleFill } from "react-icons/ri";
 
-interface IHeaderProps {
+export interface IHeaderProps {
   title: string;
 }
 
-export default function AppHeader({ title }: IHeaderProps) {
+export const AppHeader = ({ title }: IHeaderProps) => {
   return (
     <div className="navbar bg-base-100">
       <div className="navbar-start">
@@ -22,4 +22,4 @@ export default function AppHeader({ title }: IHeaderProps) {
       </div>
     </div>
   );
-}
+};

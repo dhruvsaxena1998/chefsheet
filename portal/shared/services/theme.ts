@@ -1,5 +1,5 @@
 const data_theme_key = "data_theme";
-import { isClientSide } from "../../utils/client-side-only";
+import { isClientSide } from "@utils/client-side-only";
 
 /**
  * getTheme function requires to be executed on the client side.

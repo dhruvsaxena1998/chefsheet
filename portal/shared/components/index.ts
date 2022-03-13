@@ -1,9 +1,14 @@
-export * as Header from "./Header";
-export * as Loader from "./Loader";
+export type { IHeaderProps } from "./Header";
+export { AppHeader } from "./Header";
 
-export * as SideBar from "./Sidebar";
+export { Loader } from "./Loader";
 
-export type { IOptions, SearchBarProps } from "./SearchBar";
+export { Sidebar } from "./Sidebar";
+
+export type { IError404Props } from "./Error404";
+export { Error404 } from "./Error404";
+
+export type { ISearchBarOptions, ISearchBarProps } from "./SearchBar";
 export { SearchBar } from "./SearchBar";
 
 export type { ITableProps } from "./Table";

@@ -1,5 +1,5 @@
 import { ISubCategory, IApiResponse } from "@types";
-import { API } from "../../utils/axios";
+import { API } from "@utils/axios";
 
 const find = async (
   query?: Record<string, unknown>
@@ -14,6 +14,19 @@ const find = async (
     data,
     status,
   };
+};
+
+const findOne = async (
+  id: number,
+  query?: Record<string, unknown>
+): Promise<IApiResponse<ISubCategory>> => {
+  const { data, status } = await API({
+    url: `/sub-categories/${id}`,
+    method: "get",
+    query,
+  });
+
+  return { data, status };
 };
 
 export interface CreateSubCategoryDTO {
@@ -42,4 +55,30 @@ const create = async (
   return { data, status };
 };
 
-export const SubCategoryService = { find, create };
+interface UpdateSubCategoryDTO {
+  name: string;
+}
+
+const update = async (
+  id: number,
+  payload: UpdateSubCategoryDTO
+): Promise<IApiResponse<ISubCategory>> => {
+  const { data, status } = await API({
+    url: `/sub-categories/${id}`,
+    method: "put",
+    body: payload,
+  });
+
+  return { data, status };
+};
+
+const remove = async (id: number): Promise<IApiResponse<ISubCategory>> => {
+  const { data, status } = await API({
+    url: `/sub-categories/${id}`,
+    method: "delete",
+  });
+
+  return { data, status };
+};
+
+export const SubCategoryService = { find, findOne, create, update, remove };

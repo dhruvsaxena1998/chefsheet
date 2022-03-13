@@ -1,4 +1,3 @@
-import type { GetServerSideProps, NextPage } from "next";
 import clsx from "clsx";
 import Head from "next/head";
 
@@ -6,7 +5,7 @@ import * as Yup from "yup";
 import { Formik, Form } from "formik";
 import { toast } from "react-toastify";
 
-import { ICategory, IErrors, IMeta } from "@types";
+import DefaultLayout from "../../layouts/DefaultLayout";
 import { TextInput } from "@shared/components";
 import {
   SubCategoryService,
@@ -14,7 +13,8 @@ import {
   CategoryService,
 } from "@shared/services";
 
-import DefaultLayout from "../../layouts/DefaultLayout";
+import type { GetServerSideProps, NextPage } from "next";
+import { ICategory, IErrors, IMeta } from "@types";
 
 const ValidationSchema = Yup.object().shape({
   name: Yup.string().required("Name is required"),

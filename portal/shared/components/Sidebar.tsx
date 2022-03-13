@@ -1,10 +1,11 @@
+import clsx from "clsx";
 import { useState } from "react";
 import { useRouter } from "next/router";
 
 import { IconType } from "react-icons";
 import { BiCategory, BiCategoryAlt, BiSearchAlt } from "react-icons/bi";
-import { SideBarItems } from "../../types";
-import clsx from "clsx";
+
+import { SideBarItems } from "@types";
 
 type SideBar = {
   name: string;
@@ -19,7 +20,7 @@ const sideBarData: SideBar[] = [
   { name: "Staff", slug: "staff", icon: BiCategoryAlt },
 ];
 
-function Sidebar() {
+export const Sidebar = () => {
   const router = useRouter();
   const [active, setActive] = useState<SideBarItems>(
     router.asPath.split("/")[1] as SideBarItems
@@ -48,6 +49,4 @@ function Sidebar() {
       ))}
     </ul>
   );
-}
-
-export default Sidebar;
+};

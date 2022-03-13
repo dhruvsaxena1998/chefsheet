@@ -1,6 +1,6 @@
 import styles from "./loader.module.css";
 
-export default function Loader() {
+export const Loader = () => {
   return (
     <div className="flex justify-center m-4">
       <div className={styles["lds-ripple"]}>
@@ -9,4 +9,4 @@ export default function Loader() {
       </div>
     </div>
   );
-}
+};

@@ -1,30 +1,59 @@
-import type { GetServerSideProps, NextPage } from "next";
 import clsx from "clsx";
 import Head from "next/head";
 
+import * as Yup from "yup";
 import { Formik, Form } from "formik";
 
 import DefaultLayout from "../../layouts/DefaultLayout";
-import TextInput from "../../shared/components/TextInput";
+import { Error404, TextInput } from "shared/components";
+import { SubCategoryService } from "@shared/services";
 
-interface IProps {
-  id: string;
-}
+import { ISubCategory } from "@types";
+import type { GetServerSideProps, NextPage } from "next";
+
+const ValidationSchema = Yup.object().shape({
+  name: Yup.string().required("Name is required"),
+});
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  return {
-    props: {},
-  };
+  const id = Number(ctx.params?.id);
+
+  try {
+    const { data } = await SubCategoryService.findOne(id, {
+      populate: ["category"],
+    });
+
+    const { data: subCategory } = data;
+    return {
+      props: {
+        id,
+        subCategory,
+      },
+    };
+  } catch (e) {
+    return { props: { id, subCategory: null } };
+  }
 };
 
-const EditCategory: NextPage<IProps> = (props) => {
-  console.log(props);
+const EditCategory: NextPage<{
+  id: number;
+  subCategory?: ISubCategory;
+}> = (props) => {
   const handleOnSubmit = async (values: any) => {
     try {
+      await SubCategoryService.update(props.subCategory!.id, values);
     } catch (e) {
       console.error(e);
     }
   };
+
+  if (!props.subCategory) {
+    return (
+      <DefaultLayout>
+        <Error404 message={`Sub-Category with ID-${props.id} not found! :(`} />
+      </DefaultLayout>
+    );
+  }
 
   return (
     <DefaultLayout>
@@ -39,8 +68,11 @@ const EditCategory: NextPage<IProps> = (props) => {
 
         <main className="my-4 p-4">
           <Formik
-            initialValues={{}}
+            initialValues={{
+              name: props?.subCategory?.name || "",
+            }}
             onSubmit={handleOnSubmit}
+            validationSchema={ValidationSchema}
             validateOnBlur={true}
             validateOnChange={false}
             validateOnMount={true}

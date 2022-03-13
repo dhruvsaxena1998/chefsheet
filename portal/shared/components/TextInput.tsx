@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import { ErrorMessage, Field } from "formik";
-import { PropsWithChildren, ReactNode } from "react";
+import { PropsWithChildren } from "react";
 
 export interface ITextInputProps {
   classes?: {
@@ -16,7 +16,6 @@ export interface ITextInputProps {
   type?: "text" | "password" | "email" | "number" | "select";
   hint?: string;
   placeholder?: string;
-  defaultValue?: string;
   validate?: (value: string) => string | undefined;
 }
 
