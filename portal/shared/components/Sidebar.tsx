@@ -17,6 +17,7 @@ const sideBarData: SideBar[] = [
   { name: "Search", slug: "search", icon: BiSearchAlt },
   { name: "Categories", slug: "category", icon: BiCategory },
   { name: "Sub-Categories", slug: "sub-category", icon: BiCategoryAlt },
+  { name: "Items", slug: "items", icon: BiCategoryAlt },
   { name: "Staff", slug: "staff", icon: BiCategoryAlt },
 ];
 

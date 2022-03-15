@@ -1,6 +1,6 @@
 import "react-toastify/dist/ReactToastify.css";
-import "../styles/globals.css";
 import "nprogress/nprogress.css";
+import "../styles/globals.css";
 
 import { useEffect } from "react";
 import { ToastContainer } from "react-toastify";
@@ -22,7 +22,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
       <Component {...pageProps} />
-      <ToastContainer />
+      <ToastContainer limit={3} containerId="toastify" />
     </>
   );
 }

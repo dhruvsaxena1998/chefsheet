@@ -95,7 +95,7 @@ const SubCategory: NextPage<{
             </Link>
           </div>
 
-          <div className="overflow-x-auto rounded-lg">
+          <div className="rounded-lg">
             <Table
               columns={columns}
               data={rows}
