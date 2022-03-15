@@ -16,6 +16,8 @@ export interface ITextInputProps {
   type?: "text" | "password" | "email" | "number" | "select";
   hint?: string;
   placeholder?: string;
+  autocomplete?: "on" | "off";
+
   validate?: (value: string) => string | undefined;
 }
 
@@ -28,6 +30,7 @@ export const TextInput = (props: PropsWithChildren<ITextInputProps>) => {
     placeholder = "",
     children,
     hint,
+    autocomplete = "off",
   } = props;
 
   return (
@@ -44,7 +47,7 @@ export const TextInput = (props: PropsWithChildren<ITextInputProps>) => {
           id={name}
           name={name}
           as="select"
-          className={clsx(["input", "input-bordered", classes?.input])}
+          className={clsx(["input input-bordered", classes?.input])}
           validate={props.validate}
         >
           {children}
@@ -57,6 +60,7 @@ export const TextInput = (props: PropsWithChildren<ITextInputProps>) => {
           placeholder={placeholder}
           className={clsx(["input", "input-bordered", classes?.input])}
           validate={props.validate}
+          autoComplete={autocomplete}
         />
       )}
       {hint && (

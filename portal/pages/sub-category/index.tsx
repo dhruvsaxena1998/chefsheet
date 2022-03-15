@@ -29,7 +29,7 @@ const columns = [
 ];
 
 interface SubCategoryRow {
-  id: number;
+  id?: number;
   name: string;
   code: string;
   category: string;
@@ -73,7 +73,7 @@ const SubCategory: NextPage<{
   );
 
   const handleOnDelete = async (row: SubCategoryRow) => {
-    await SubCategoryService.remove(row.id);
+    await SubCategoryService.remove(row.id!);
     refreshSsrProps();
     toast.success("Sub-Category deleted successfully");
   };

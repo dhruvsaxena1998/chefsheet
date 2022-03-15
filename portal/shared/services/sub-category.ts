@@ -55,7 +55,7 @@ const create = async (
   return { data, status };
 };
 
-interface UpdateSubCategoryDTO {
+export interface UpdateSubCategoryDTO {
   name: string;
 }
 

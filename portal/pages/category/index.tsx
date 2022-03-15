@@ -1,16 +1,17 @@
-import type { NextPage } from "next";
+import { useMemo } from "react";
+import clsx from "clsx";
 import Head from "next/head";
 import Link from "next/link";
-import { useRouter } from "next/router";
-
-import { useMutation, useQuery } from "react-query";
+import { toast } from "react-toastify";
 
 import DefaultLayout from "../../layouts/DefaultLayout";
-import Loader from "../../shared/components/Loader";
-import SearchBar from "../../shared/components/SearchBar";
-import Table from "../../shared/components/Table";
 
-import { deleteCategory, getCategories } from "../../shared/services/category";
+import { useRefresh } from "@shared/hooks";
+import { CategoryService, SubCategoryService } from "@shared/services";
+import { Table, SearchBar } from "@shared/components";
+
+import { GetServerSideProps, NextPage } from "next";
+import { ICategory, IErrors, IMeta } from "@types";
 
 const columns = [
   {
@@ -23,16 +24,54 @@ const columns = [
   },
 ];
 
-const Category: NextPage = () => {
-  const query = useQuery("categories", getCategories, {
-    cacheTime: 0,
-  });
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  try {
+    const { page = 1 } = ctx.query;
+    const { data } = await CategoryService.find({
+      pagination: {
+        page,
+      },
+    });
 
-  const deleteMutation = useMutation((id: string) => deleteCategory(id), {
-    onSuccess: () => query.refetch(),
-  });
+    const { data: categories, meta } = data;
 
-  const router = useRouter();
+    return {
+      props: { categories, meta },
+    };
+  } catch (e) {
+    return { props: { categories: [] } };
+  }
+};
+
+const SubCategory: NextPage<{
+  categories: ICategory[];
+  meta: IMeta;
+  error?: IErrors;
+}> = (props) => {
+  const { refresh: refreshSsrProps, router } = useRefresh();
+  const rows: Array<ICategory> = useMemo(
+    () =>
+      props.categories.map(({ id, code, name }) => ({
+        id,
+        code,
+        name,
+      })),
+    [props.categories]
+  );
+
+  const handleOnDelete = async (row: ICategory) => {
+    await CategoryService.remove(row.id!);
+    refreshSsrProps();
+    toast.success("Sub-Category deleted successfully");
+  };
+
+  const handleOnEdit = (row: ICategory) => {
+    router.push(`/category/${row.id}`);
+  };
+
+  const handlePaginate = (page: number) => {
+    router.push(`/category?page=${page}`);
+  };
 
   return (
     <DefaultLayout>
@@ -42,48 +81,58 @@ const Category: NextPage = () => {
         </Head>
 
         <main className="mb-4">
-          <SearchBar slug="category" />
+          <SearchBar slug="sub-category" />
 
           <div className="divider"></div>
-
-          <div className="prose my-4">
-            <h1>Categories</h1>
-          </div>
-          {deleteMutation.isError && (
-            <div
-              className="alert alert-error text-white font-bold my-4"
-              onClick={() => deleteMutation.reset()}
-            >
-              Error while deleting, Please make sure no sub-categories are
-              attached to this category.
+          <div className="flex justify-between items-center mb-4s">
+            <div className="prose my-4">
+              <h1>Categories</h1>
             </div>
-          )}
-
-          <div className="overflow-x-auto bg-base-300 rounded-lg">
-            {query.isLoading ? (
-              <Loader />
-            ) : (
-              <Table
-                columns={columns}
-                data={query.data?.data || []}
-                classes={{
-                  table: "table w-full",
-                }}
-                actions={["edit", "delete"]}
-                onEdit={(id) => {
-                  router.push(`/category/${id}`);
-                }}
-                onDelete={(id) => {
-                  deleteMutation.mutate(id);
-                }}
-              />
-            )}
+            <Link href="/category/create" passHref>
+              <div className="btn btn-wide bg-indigo-500 text-white border-0">
+                Create
+              </div>
+            </Link>
           </div>
 
-          <div className="flex justify-end">
-            <Link href="/category/create" passHref>
-              <div className="btn btn-wide bg-indigo-500 my-4">Create</div>
-            </Link>
+          <div className="overflow-x-auto rounded-lg">
+            <Table
+              columns={columns}
+              data={rows}
+              index={true}
+              classes={{
+                table: "table w-full",
+              }}
+              actions={["edit", "delete"]}
+              onEdit={(row: ICategory) => handleOnEdit(row)}
+              onDelete={(row: ICategory) => handleOnDelete(row)}
+            />
+            <div className="flex justify-center">
+              <div className="btn-group">
+                {Array(props?.meta?.pagination?.pageCount || 0)
+                  .fill(true)
+                  .map((_, index) => {
+                    return (
+                      <div
+                        className={clsx([
+                          "btn btn-sm",
+                          {
+                            "btn-active":
+                              index + 1 === props?.meta?.pagination?.page,
+                          },
+                        ])}
+                        key={index}
+                        onClick={() => {
+                          if (index + 1 !== props.meta.pagination.page)
+                            handlePaginate(index + 1);
+                        }}
+                      >
+                        1
+                      </div>
+                    );
+                  })}
+              </div>
+            </div>
           </div>
         </main>
       </>
@@ -91,4 +140,4 @@ const Category: NextPage = () => {
   );
 };
 
-export default Category;
+export default SubCategory;

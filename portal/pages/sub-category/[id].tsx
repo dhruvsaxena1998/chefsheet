@@ -41,7 +41,7 @@ const EditCategory: NextPage<{
 }> = (props) => {
   const handleOnSubmit = async (values: any) => {
     try {
-      await SubCategoryService.update(props.subCategory!.id, values);
+      await SubCategoryService.update(props.subCategory!.id!, values);
     } catch (e) {
       console.error(e);
     }
@@ -77,7 +77,7 @@ const EditCategory: NextPage<{
             validateOnChange={false}
             validateOnMount={true}
           >
-            {({ isSubmitting, isValidating, isValid }) => (
+            {({ isSubmitting, isValidating, isValid, errors, touched }) => (
               <Form>
                 <TextInput
                   label="Name"
@@ -85,6 +85,7 @@ const EditCategory: NextPage<{
                   placeholder="e.g. Reusable"
                   classes={{
                     wrapper: "max-w-sm",
+                    input: errors.name && touched.name ? "border-red-500" : "",
                   }}
                 />
 

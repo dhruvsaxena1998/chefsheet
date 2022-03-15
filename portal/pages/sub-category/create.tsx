@@ -18,7 +18,9 @@ import { ICategory, IErrors, IMeta } from "@types";
 
 const ValidationSchema = Yup.object().shape({
   name: Yup.string().required("Name is required"),
-  code: Yup.string().required("Code is required"),
+  code: Yup.string()
+    .matches(/^[A-Za-z0-9-_.~]*$/, "Invalid format")
+    .required("Code is required"),
   category: Yup.string()
     .required("Category is required")
     .test("invalid", "Category is invalid", (value) => value !== "null"),
@@ -89,7 +91,7 @@ const CreateSubCategory: NextPage<{
             validateOnChange={false}
             validateOnMount={true}
           >
-            {({ isSubmitting, isValidating, isValid }) => (
+            {({ isSubmitting, isValidating, isValid, errors, touched }) => (
               <Form>
                 <TextInput
                   label="Name"
@@ -97,9 +99,9 @@ const CreateSubCategory: NextPage<{
                   placeholder="e.g. Reusable"
                   classes={{
                     wrapper: "max-w-sm",
+                    input: errors.name && touched.name ? "border-red-500" : "",
                   }}
                 />
-
                 <TextInput
                   label="Code"
                   hint="This should be unique"
@@ -107,6 +109,7 @@ const CreateSubCategory: NextPage<{
                   placeholder="e.g. Res-1"
                   classes={{
                     wrapper: "w-full max-w-sm",
+                    input: errors.code && touched.code ? "border-red-500" : "",
                   }}
                 />
 
@@ -116,6 +119,7 @@ const CreateSubCategory: NextPage<{
                   type="select"
                   classes={{
                     wrapper: "w-full max-w-sm",
+                    input: errors.category && touched.category ? "border-red-500" : "",
                   }}
                 >
                   <>
