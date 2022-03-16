@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { ReactNode, useMemo } from "react";
+import { useMemo } from "react";
 import { Row, useTable } from "react-table";
 
 type Actions = "edit" | "delete";
@@ -117,5 +117,3 @@ export const Table = (props: ITableProps) => {
     </div>
   );
 };
-
-export default Table;

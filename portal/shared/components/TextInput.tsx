@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import { ErrorMessage, Field, useFormikContext } from "formik";
-import { ChangeEvent, PropsWithChildren, useEffect } from "react";
+import { ChangeEvent, PropsWithChildren } from "react";
 
 export interface ITextInputProps {
   classes?: {
@@ -107,5 +107,3 @@ export const TextInput = (props: PropsWithChildren<ITextInputProps>) => {
     </div>
   );
 };
-
-export default TextInput;

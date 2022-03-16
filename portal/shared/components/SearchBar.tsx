@@ -55,5 +55,3 @@ export const SearchBar = ({ slug = "all" }: ISearchBarProps) => {
     </div>
   );
 };
-
-export default SearchBar;
