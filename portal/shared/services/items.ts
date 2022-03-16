@@ -33,7 +33,7 @@ export interface ItemsDTO {
   name: string;
   description: string;
   quantity: number;
-  expiration_date: Date;
+  expiration_date: string;
   category: string | number;
   sub_category: string | number;
 }

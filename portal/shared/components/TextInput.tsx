@@ -1,6 +1,6 @@
 import clsx from "clsx";
-import { ErrorMessage, Field } from "formik";
-import { PropsWithChildren } from "react";
+import { ErrorMessage, Field, useFormikContext } from "formik";
+import { ChangeEvent, PropsWithChildren, useEffect } from "react";
 
 export interface ITextInputProps {
   classes?: {
@@ -13,12 +13,21 @@ export interface ITextInputProps {
   };
   label?: string;
   name: string;
-  type?: "text" | "password" | "email" | "number" | "select";
+  type?:
+    | "text"
+    | "password"
+    | "email"
+    | "number"
+    | "select"
+    | "date"
+    | "textarea";
   hint?: string;
   placeholder?: string;
+  disabled?: boolean;
   autocomplete?: "on" | "off";
 
   validate?: (value: string) => string | undefined;
+  onChange?: (value: any, event: ChangeEvent<any>) => void;
 }
 
 export const TextInput = (props: PropsWithChildren<ITextInputProps>) => {
@@ -31,7 +40,10 @@ export const TextInput = (props: PropsWithChildren<ITextInputProps>) => {
     children,
     hint,
     autocomplete = "off",
+    disabled = false,
   } = props;
+
+  const { handleChange } = useFormikContext();
 
   return (
     <div className={clsx(["form-control", classes?.wrapper])}>
@@ -49,9 +61,25 @@ export const TextInput = (props: PropsWithChildren<ITextInputProps>) => {
           as="select"
           className={clsx(["input input-bordered", classes?.input])}
           validate={props.validate}
+          disabled={disabled}
+          onChange={(e: ChangeEvent<any>) => {
+            handleChange(e);
+            props.onChange && props.onChange(e.target.value, e);
+          }}
         >
           {children}
         </Field>
+      ) : type === "textarea" ? (
+        <Field
+          id={name}
+          name={name}
+          as="textarea"
+          placeholder={placeholder}
+          className={clsx(["textarea textarea-bordered", classes?.input])}
+          validate={props.validate}
+          autoComplete={autocomplete}
+          disabled={disabled}
+        />
       ) : (
         <Field
           id={name}
@@ -61,6 +89,7 @@ export const TextInput = (props: PropsWithChildren<ITextInputProps>) => {
           className={clsx(["input", "input-bordered", classes?.input])}
           validate={props.validate}
           autoComplete={autocomplete}
+          disabled={disabled}
         />
       )}
       {hint && (

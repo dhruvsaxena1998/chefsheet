@@ -11,8 +11,7 @@ import { ItemService } from "@shared/services";
 import { Table, SearchBar } from "@shared/components";
 
 import { GetServerSideProps, NextPage } from "next";
-import { IErrors, IMeta, ISubCategory } from "@types";
-import { Items } from "@types";
+import { IErrors, IMeta, Items } from "@types";
 
 const columns = [
   {
@@ -125,7 +124,7 @@ const Items: NextPage<{
             <div className="prose my-4">
               <h1>Items</h1>
             </div>
-            <Link href="/sub-category/create" passHref>
+            <Link href="/items/create" passHref>
               <div className="btn btn-wide bg-indigo-500 text-white border-0">
                 Create
               </div>
