@@ -5,7 +5,7 @@ import * as Yup from "yup";
 import { toast } from "react-toastify";
 import NProgress from "nprogress";
 import { Formik, Form } from "formik";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 
 import DefaultLayout from "../../layouts/DefaultLayout";
 import { TextInput } from "@shared/components";
@@ -17,7 +17,7 @@ import {
 } from "@shared/services";
 
 import type { GetServerSideProps, NextPage } from "next";
-import { ICategory, IErrors, IMeta, ISubCategory } from "@types";
+import { ICategory, IErrors, IMeta, ISubCategory, Items } from "@types";
 
 const ValidationSchema = Yup.object().shape({
   name: Yup.string().required("Name is required"),
@@ -36,34 +36,46 @@ const ValidationSchema = Yup.object().shape({
     .test("invalid", "Sub-Category is invalid", (value) => value !== "null"),
 });
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
   try {
-    const { data } = await CategoryService.find({
-      pagination: {
-        start: 0,
-        limit: 100,
-      },
-    });
+    const id = Number(ctx.params?.id);
 
-    const { data: categories, meta } = data;
+    const [{ data: itemData }, { data: categoryData }] = await Promise.all([
+      ItemService.findOne(id, {
+        populate: ["category", "sub_category"],
+      }),
+      CategoryService.find({
+        pagination: {
+          limit: 100,
+        },
+      }),
+    ]);
+
+    const { data: categories } = categoryData;
+    const { data: item } = itemData;
 
     return {
       props: {
+        item,
         categories,
-        meta,
       },
     };
   } catch (e) {
-    return { props: { data: [] } };
+    return { props: { item: {}, categories: [] } };
   }
 };
 
-const CreateItem: NextPage<{
+const EditItem: NextPage<{
+  item: Items;
   categories: ICategory[];
   meta: IMeta;
   error?: IErrors;
 }> = (props) => {
   const [subCategories, setSubCategories] = useState<ISubCategory[]>([]);
+
+  useEffect(() => {
+    handleCategoryChange(props.item?.category?.data?.id!);
+  }, [props.item]);
 
   const handleCategoryChange = async (categoryId: number) => {
     NProgress.start();
@@ -93,8 +105,8 @@ const CreateItem: NextPage<{
   const handleOnSubmit = async (values: ItemsDTO) => {
     NProgress.start();
     try {
-      await ItemService.create(values);
-      toast.success("Item created successfully");
+      await ItemService.update(props.item?.id!, values);
+      toast.success("Item updated successfully");
     } catch (e) {
       const error = e as any;
       const { data, status } = error?.response || {};
@@ -121,12 +133,12 @@ const CreateItem: NextPage<{
         <main className="my-4 p-4">
           <Formik
             initialValues={{
-              name: "",
-              description: "",
-              expiration_date: "",
-              quantity: 0,
-              category: "null",
-              sub_category: "",
+              name: props.item?.name || "",
+              description: props.item?.description || "",
+              expiration_date: props.item?.expiration_date || "",
+              quantity: props.item?.quantity,
+              category: props.item?.category?.data?.id || "null",
+              sub_category: props.item?.sub_category?.data?.id || "null",
             }}
             onSubmit={handleOnSubmit}
             validationSchema={ValidationSchema}
@@ -250,7 +262,7 @@ const CreateItem: NextPage<{
                     { disabled: !isValid || isValidating || isSubmitting },
                   ])}
                 >
-                  Create
+                  Update
                 </button>
               </Form>
             )}
@@ -261,4 +273,4 @@ const CreateItem: NextPage<{
   );
 };
 
-export default CreateItem;
+export default EditItem;
