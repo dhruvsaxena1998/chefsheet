@@ -1,0 +1,93 @@
+{
+  "kind": "collectionType",
+  "collectionName": "admins",
+  "info": {
+    "singularName": "admin",
+    "pluralName": "admins",
+    "displayName": "admin",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "username": {
+      "type": "string"
+    },
+    "email": {
+      "type": "email"
+    },
+    "name": {
+      "type": "string"
+    },
+    "password": {
+      "type": "password",
+      "private": true
+    },
+    "reset_password_token": {
+      "type": "string",
+      "private": true
+    },
+    "confirmation_token": {
+      "type": "string",
+      "private": true
+    },
+    "blocked": {
+      "type": "boolean",
+      "default": false
+    },
+    "inventories": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::inventory.inventory"
+    },
+    "staff_members": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::staff-member.staff-member"
+    },
+    "clients": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::client.client"
+    },
+    "access": {
+      "type": "json"
+    },
+    "settings": {
+      "type": "json"
+    },
+    "gender": {
+      "type": "enumeration",
+      "enum": [
+        "Male",
+        "Female",
+        "Prefer not to say"
+      ]
+    },
+    "contact_number": {
+      "type": "string"
+    },
+    "country_code": {
+      "type": "string",
+      "default": "+91"
+    },
+    "profile_image": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "role": {
+      "type": "enumeration",
+      "enum": [
+        "admin",
+        "editor",
+        "viewer"
+      ]
+    }
+  }
+}
