@@ -2,7 +2,7 @@ import type { NextPage } from "next";
 import Head from "next/head";
 
 import DefaultLayout from "../layouts/DefaultLayout";
-import SearchBar from "../shared/components/SearchBar";
+import {SearchBar} from '@shared/components'
 
 const Home: NextPage = () => {
   return (

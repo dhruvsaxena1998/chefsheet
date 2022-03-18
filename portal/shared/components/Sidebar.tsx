@@ -19,6 +19,7 @@ const sideBarData: SideBar[] = [
   { name: "Sub-Categories", slug: "sub-category", icon: BiCategoryAlt },
   { name: "Items", slug: "items", icon: BiCategoryAlt },
   { name: "Staff", slug: "staff", icon: BiCategoryAlt },
+  { name: "Users", slug: "users", icon: BiCategoryAlt },
 ];
 
 export const Sidebar = () => {

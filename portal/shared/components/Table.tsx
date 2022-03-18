@@ -30,6 +30,7 @@ export const Table = (props: ITableProps) => {
     useTable({ columns, data: props.data });
 
   const handleOnActionClick = (row: any, action: Actions) => {
+    console.log(row);
     switch (action) {
       case "edit":
         props.onEdit && props.onEdit(row);
@@ -91,7 +92,14 @@ export const Table = (props: ITableProps) => {
                     {...cell.getCellProps()}
                     key={`tbody-cell-${index}-${cell.row.original.id}`}
                   >
-                    {cell.render("Cell")}
+                    <span
+                      className={clsx([
+                        // @ts-ignore
+                        { capitalize: cell.column?.capitalize || false },
+                      ])}
+                    >
+                      {cell.render("Cell")}
+                    </span>
                   </td>
                 ))}
                 {props.actions && (

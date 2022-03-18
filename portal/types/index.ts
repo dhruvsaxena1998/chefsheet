@@ -4,7 +4,8 @@ export type SideBarItems =
   | "category"
   | "sub-category"
   | "items"
-  | "staff";
+  | "staff"
+  | "users";
 
 export type SearchOptions = "all" | "category" | "sub-category" | "staff";
 
@@ -45,3 +46,4 @@ export interface IApiResponse<T> {
 
 export type { ICategory, ISubCategory } from "./category";
 export type { Items } from "./items";
+export type { IUser } from "./users";
