@@ -123,7 +123,6 @@ const Users: NextPage<{
                 table: "table w-full",
               }}
               actions={["edit", "delete"]}
-              onClick={(row: UsersRow) => handleOnEdit(row)}
               onEdit={(row: UsersRow) => handleOnEdit(row)}
               onDelete={(row: UsersRow) => handleOnDelete(row)}
             />

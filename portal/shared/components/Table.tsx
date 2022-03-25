@@ -30,7 +30,6 @@ export const Table = (props: ITableProps) => {
     useTable({ columns, data: props.data });
 
   const handleOnActionClick = (row: any, action: Actions) => {
-    console.log(row);
     switch (action) {
       case "edit":
         props.onEdit && props.onEdit(row);
@@ -81,7 +80,7 @@ export const Table = (props: ITableProps) => {
               <tr
                 {...row.getRowProps()}
                 key={`tbody-${index}`}
-                onClick={() => handleOnClick(row)}
+                onClick={() => handleOnClick(row.original)}
                 className={clsx([{ "cursor-pointer": props.onClick }])}
               >
                 {props.index && (

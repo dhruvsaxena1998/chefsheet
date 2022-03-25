@@ -4,6 +4,7 @@ import { PropsWithChildren } from "react";
 import { MdKeyboardBackspace } from "react-icons/md";
 
 export interface IError404Props {
+  title: string;
   message: string;
   classes?: {
     message?: string;
@@ -20,7 +21,7 @@ export const Error404 = (props: PropsWithChildren<IError404Props>) => {
   return (
     <div className="mockup-window border border-slate-400 bg-base-300">
       <div className="prose m-4">
-        <h2>SubCategory</h2>
+        <h2>{props.title}</h2>
       </div>
       <div className="flex flex-col justify-center items-center px-4 py-16 border-t border-slate-400">
         <div className="text-lg m-4 font-bold">{props?.message}</div>

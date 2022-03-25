@@ -6,27 +6,12 @@ import { toast } from "react-toastify";
 
 import DefaultLayout from "../../layouts/DefaultLayout";
 
-import { useRefresh } from "@shared/hooks";
+import { useRefresh, useTranslation } from "@shared/hooks";
 import { SubCategoryService } from "@shared/services";
 import { Table, SearchBar } from "@shared/components";
 
 import { GetServerSideProps, NextPage } from "next";
 import { IErrors, IMeta, ISubCategory } from "@types";
-
-const columns = [
-  {
-    Header: "Name",
-    accessor: "name",
-  },
-  {
-    Header: "Code",
-    accessor: "code",
-  },
-  {
-    Header: "Category",
-    accessor: "category",
-  },
-];
 
 interface SubCategoryRow {
   id?: number;
@@ -61,6 +46,8 @@ const SubCategory: NextPage<{
   error?: IErrors;
 }> = (props) => {
   const { refresh: refreshSsrProps, router } = useRefresh();
+  const t = useTranslation();
+
   const rows: SubCategoryRow[] = useMemo(
     () =>
       props.subCategories.map(({ id, code, name, category }) => ({
@@ -75,7 +62,7 @@ const SubCategory: NextPage<{
   const handleOnDelete = async (row: SubCategoryRow) => {
     await SubCategoryService.remove(row.id!);
     refreshSsrProps();
-    toast.success("Sub-Category deleted successfully");
+    toast.success(t.sub_category.messages.delete_success);
   };
 
   const handleOnEdit = (row: SubCategoryRow) => {
@@ -86,11 +73,29 @@ const SubCategory: NextPage<{
     router.push(`/sub-category?page=${page}`);
   };
 
+  const columns = useMemo(
+    () => [
+      {
+        Header: t.table.name,
+        accessor: "name",
+      },
+      {
+        Header: t.table.code,
+        accessor: "code",
+      },
+      {
+        Header: t.sub_category.table.category,
+        accessor: "category",
+      },
+    ],
+    [t]
+  );
+
   return (
     <DefaultLayout>
       <>
         <Head>
-          <title>Cheffsheet - Sub Categories</title>
+          <title>{t.sub_category.titles.index}</title>
         </Head>
 
         <main className="mb-4">
@@ -99,11 +104,11 @@ const SubCategory: NextPage<{
           <div className="divider"></div>
           <div className="flex justify-between items-center mb-4s">
             <div className="prose my-4">
-              <h1>Sub - Categories</h1>
+              <h1>{t.sub_category.headings.index}</h1>
             </div>
             <Link href="/sub-category/create" passHref>
               <div className="btn btn-wide bg-indigo-500 text-white border-0">
-                Create
+                {t.buttons.create}
               </div>
             </Link>
           </div>

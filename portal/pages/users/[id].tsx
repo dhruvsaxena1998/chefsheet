@@ -6,56 +6,60 @@ import { Formik, Form } from "formik";
 
 import DefaultLayout from "../../layouts/DefaultLayout";
 import { Error404, TextInput } from "shared/components";
-import { SubCategoryService } from "@shared/services";
+import { SubCategoryService, UserService } from "@shared/services";
 
-import { ISubCategory } from "@types";
+import { ISubCategory, IUser } from "@types";
 import type { GetServerSideProps, NextPage } from "next";
-import { useTranslation } from "@shared/hooks";
+
+const ValidationSchema = Yup.object().shape({
+  name: Yup.string().required("Name is required"),
+  email: Yup.string().email("Invalid email").required("Email is required"),
+  contact_number: Yup.string()
+    .matches(/^[0-9]{10}$/, "Invalid contact number")
+    .required("Contact number is required"),
+});
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const id = Number(ctx.params?.id);
 
   try {
-    const { data } = await SubCategoryService.findOne(id, {
-      populate: ["category"],
+    const { data } = await UserService.findOne(id, {
+      populate: ["profile_image", "clients", "inventories", "staff_members"],
     });
 
-    const { data: subCategory } = data;
+    const { data: user } = data;
     return {
       props: {
         id,
-        subCategory,
+        user,
       },
     };
   } catch (e) {
-    return { props: { id, subCategory: null } };
+    return { props: { id, user: null } };
   }
 };
 
-const EditCategory: NextPage<{
+const EditUser: NextPage<{
   id: number;
-  subCategory?: ISubCategory;
+  user?: IUser;
 }> = (props) => {
-  const t = useTranslation();
-
-  const ValidationSchema = Yup.object().shape({
-    name: Yup.string().required(t.sub_category.form.name_error_required),
-  });
-
   const handleOnSubmit = async (values: any) => {
     try {
-      await SubCategoryService.update(props.subCategory!.id!, values);
+      await UserService.update(props.user!.id!, {
+        ...values,
+        contact_number: String(values.contact_number),
+      });
     } catch (e) {
       console.error(e);
     }
   };
 
-  if (!props.subCategory) {
+  if (!props.user) {
     return (
       <DefaultLayout>
         <Error404
-          title={t.sub_category.headings.index}
-          message={t.sub_category.messages.error_404}
+          title="Users"
+          message={`User with ID-${props.id} not found! :(`}
         />
       </DefaultLayout>
     );
@@ -65,17 +69,18 @@ const EditCategory: NextPage<{
     <DefaultLayout>
       <>
         <Head>
-          <title>{t.sub_category.titles.edit}</title>
+          <title>User - Edit</title>
         </Head>
 
         <div className="prose">
-          <h1>{t.sub_category.headings.edit}</h1>
+          <h1>Edit User</h1>
         </div>
-
         <main className="my-4 p-4">
           <Formik
             initialValues={{
-              name: props?.subCategory?.name || "",
+              name: props?.user?.name || "",
+              email: props.user.email || "",
+              contact_number: props.user.contact_number || "",
             }}
             onSubmit={handleOnSubmit}
             validationSchema={ValidationSchema}
@@ -86,9 +91,30 @@ const EditCategory: NextPage<{
             {({ isSubmitting, isValidating, isValid, errors, touched }) => (
               <Form>
                 <TextInput
-                  label={t.sub_category.form.name}
+                  label="Name"
                   name="name"
-                  placeholder={t.sub_category.form.name_placeholder}
+                  placeholder="e.g. Reusable"
+                  classes={{
+                    wrapper: "max-w-sm",
+                    input: errors.name && touched.name ? "border-red-500" : "",
+                  }}
+                />
+
+                <TextInput
+                  label="Email"
+                  name="email"
+                  disabled={true}
+                  classes={{
+                    wrapper: "max-w-sm",
+                    input: errors.name && touched.name ? "border-red-500" : "",
+                  }}
+                />
+
+                <TextInput
+                  label="Contact Number"
+                  name="contact_number"
+                  type="number"
+                  placeholder="e.g. Reusable"
                   classes={{
                     wrapper: "max-w-sm",
                     input: errors.name && touched.name ? "border-red-500" : "",
@@ -104,7 +130,7 @@ const EditCategory: NextPage<{
                     { disabled: !isValid || isValidating || isSubmitting },
                   ])}
                 >
-                  {t.buttons.update}
+                  Update
                 </button>
               </Form>
             )}
@@ -115,4 +141,4 @@ const EditCategory: NextPage<{
   );
 };
 
-export default EditCategory;
+export default EditUser;

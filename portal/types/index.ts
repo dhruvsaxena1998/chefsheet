@@ -44,6 +44,15 @@ export interface IApiResponse<T> {
   status: number;
 }
 
+export interface IApiResponseSingle<T> {
+  data: {
+    data: T;
+    meta: IMeta;
+    error: IErrors;
+  };
+  status: number;
+}
+
 export type { ICategory, ISubCategory } from "./category";
 export type { Items } from "./items";
 export type { IUser } from "./users";

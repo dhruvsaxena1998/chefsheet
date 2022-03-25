@@ -8,7 +8,7 @@ import { Formik, Form } from "formik";
 import { ChangeEvent, useEffect, useState } from "react";
 
 import DefaultLayout from "../../layouts/DefaultLayout";
-import { TextInput } from "@shared/components";
+import { Error404, TextInput } from "@shared/components";
 import {
   ItemsDTO,
   ItemService,
@@ -37,9 +37,8 @@ const ValidationSchema = Yup.object().shape({
 });
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const id = Number(ctx.params?.id);
   try {
-    const id = Number(ctx.params?.id);
-
     const [{ data: itemData }, { data: categoryData }] = await Promise.all([
       ItemService.findOne(id, {
         populate: ["category", "sub_category"],
@@ -56,17 +55,19 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
     return {
       props: {
+        id,
         item,
         categories,
       },
     };
   } catch (e) {
-    return { props: { item: {}, categories: [] } };
+    return { props: { id, item: null, categories: [] } };
   }
 };
 
 const EditItem: NextPage<{
-  item: Items;
+  id?: number;
+  item?: Items;
   categories: ICategory[];
   meta: IMeta;
   error?: IErrors;
@@ -119,6 +120,17 @@ const EditItem: NextPage<{
     }
   };
 
+  if (!props.item) {
+    return (
+      <DefaultLayout>
+        <Error404
+          title="Item"
+          message={`Item with ID-${props.id} not found! :(`}
+        />
+      </DefaultLayout>
+    );
+  }
+
   return (
     <DefaultLayout>
       <>
@@ -136,7 +148,7 @@ const EditItem: NextPage<{
               name: props.item?.name || "",
               description: props.item?.description || "",
               expiration_date: props.item?.expiration_date || "",
-              quantity: props.item?.quantity,
+              quantity: props.item?.quantity!,
               category: props.item?.category?.data?.id || "null",
               sub_category: props.item?.sub_category?.data?.id || "null",
             }}

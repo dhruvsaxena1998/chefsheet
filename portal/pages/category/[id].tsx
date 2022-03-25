@@ -48,7 +48,7 @@ const EditCategory: NextPage<{
   if (!props.category) {
     return (
       <DefaultLayout>
-        <Error404 message={`Sub-Category with ID-${props.id} not found! :(`} />
+        <Error404 title="Category" message={`Category with ID-${props.id} not found! :(`} />
       </DefaultLayout>
     );
   }

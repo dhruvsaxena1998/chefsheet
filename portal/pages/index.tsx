@@ -2,14 +2,17 @@ import type { NextPage } from "next";
 import Head from "next/head";
 
 import DefaultLayout from "../layouts/DefaultLayout";
-import {SearchBar} from '@shared/components'
+import { SearchBar } from "@shared/components";
+import { useTranslation } from "@shared/hooks";
 
 const Home: NextPage = () => {
+  const t = useTranslation();
+
   return (
     <DefaultLayout>
       <>
         <Head>
-          <title>Chefsheet</title>
+          <title>{t.chefsheet}</title>
         </Head>
 
         <main>

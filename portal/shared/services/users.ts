@@ -1,9 +1,9 @@
-import { IApiResponse, Items } from "@types";
+import { IApiResponse, IApiResponseSingle, Items, IUser } from "@types";
 import { API } from "@utils/axios";
 
 const find = async (
   query?: Record<string, unknown>
-): Promise<IApiResponse<Items>> => {
+): Promise<IApiResponse<IUser>> => {
   const { data, status } = await API({
     url: "/admins",
     method: "get",
@@ -19,9 +19,9 @@ const find = async (
 const findOne = async (
   id: number,
   query?: Record<string, unknown>
-): Promise<IApiResponse<Items>> => {
+): Promise<IApiResponseSingle<IUser>> => {
   const { data, status } = await API({
-    url: `/items/${id}`,
+    url: `/admins/${id}`,
     method: "get",
     query,
   });
@@ -29,18 +29,14 @@ const findOne = async (
   return { data, status };
 };
 
-export interface ItemsDTO {
+export interface CreateUserDTO {
   name: string;
-  description: string;
-  quantity: number;
-  expiration_date: string;
-  category: string | number;
-  sub_category: string | number;
+  contact_number: string;
 }
 
-const create = async (payload: ItemsDTO): Promise<IApiResponse<Items>> => {
+const create = async (payload: CreateUserDTO): Promise<IApiResponse<IUser>> => {
   const { data, status } = await API({
-    url: "/items",
+    url: "/admins",
     method: "post",
     body: payload,
   });
@@ -48,12 +44,17 @@ const create = async (payload: ItemsDTO): Promise<IApiResponse<Items>> => {
   return { data, status };
 };
 
+export interface UpdateUserDTO {
+  name: string;
+  contact_number: string;
+}
+
 const update = async (
   id: number,
-  payload: ItemsDTO
-): Promise<IApiResponse<Items>> => {
+  payload: UpdateUserDTO
+): Promise<IApiResponse<IUser>> => {
   const { data, status } = await API({
-    url: `/items/${id}`,
+    url: `/admins/${id}`,
     method: "put",
     body: payload,
   });
@@ -61,9 +62,9 @@ const update = async (
   return { data, status };
 };
 
-const remove = async (id: number): Promise<IApiResponse<Items>> => {
+const remove = async (id: number): Promise<IApiResponse<IUser>> => {
   const { data, status } = await API({
-    url: `/items/${id}`,
+    url: `/admins/${id}`,
     method: "delete",
   });
 

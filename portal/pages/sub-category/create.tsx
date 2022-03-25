@@ -15,16 +15,7 @@ import {
 
 import type { GetServerSideProps, NextPage } from "next";
 import { ICategory, IErrors, IMeta } from "@types";
-
-const ValidationSchema = Yup.object().shape({
-  name: Yup.string().required("Name is required"),
-  code: Yup.string()
-    .matches(/^[A-Za-z0-9-_.~]*$/, "Invalid format")
-    .required("Code is required"),
-  category: Yup.string()
-    .required("Category is required")
-    .test("invalid", "Category is invalid", (value) => value !== "null"),
-});
+import { useTranslation } from "@shared/hooks";
 
 export const getServerSideProps: GetServerSideProps = async () => {
   try {
@@ -53,10 +44,12 @@ const CreateSubCategory: NextPage<{
   meta: IMeta;
   error?: IErrors;
 }> = (props) => {
+  const t = useTranslation();
+
   const handleOnSubmit = async (values: CreateSubCategoryDTO) => {
     try {
       await SubCategoryService.create(values);
-      toast.success("Sub-Category created successfully");
+      toast.success(t.sub_category.messages.create_success);
     } catch (e) {
       const error = e as any;
       const { data, status } = error?.response || {};
@@ -67,15 +60,29 @@ const CreateSubCategory: NextPage<{
     }
   };
 
+  const ValidationSchema = Yup.object().shape({
+    name: Yup.string().required(t.sub_category.form.name_error_required),
+    code: Yup.string()
+      .matches(/^[A-Za-z0-9-_.~]*$/, t.sub_category.form.code_error_invalid)
+      .required(t.sub_category.form.code_error_required),
+    category: Yup.string()
+      .required(t.sub_category.form.category_error_required)
+      .test(
+        "invalid",
+        t.sub_category.form.category_error_invalid,
+        (value) => value !== "null"
+      ),
+  });
+
   return (
     <DefaultLayout>
       <>
         <Head>
-          <title>SubCategory - Create</title>
+          <title>{t.sub_category.titles.create}</title>
         </Head>
 
         <div className="prose">
-          <h1>Create Sub-Category</h1>
+          <h1>{t.sub_category.headings.create}</h1>
         </div>
 
         <main className="my-4 p-4">
@@ -94,19 +101,19 @@ const CreateSubCategory: NextPage<{
             {({ isSubmitting, isValidating, isValid, errors, touched }) => (
               <Form>
                 <TextInput
-                  label="Name"
+                  label={t.sub_category.form.name}
                   name="name"
-                  placeholder="e.g. Reusable"
+                  placeholder={t.sub_category.form.name_placeholder}
                   classes={{
                     wrapper: "max-w-sm",
                     input: errors.name && touched.name ? "border-red-500" : "",
                   }}
                 />
                 <TextInput
-                  label="Code"
-                  hint="This should be unique"
+                  label={t.sub_category.form.code}
+                  hint={t.sub_category.form.code_hint}
                   name="code"
-                  placeholder="e.g. Res-1"
+                  placeholder={t.sub_category.form.code_placeholder}
                   classes={{
                     wrapper: "w-full max-w-sm",
                     input: errors.code && touched.code ? "border-red-500" : "",
@@ -114,16 +121,21 @@ const CreateSubCategory: NextPage<{
                 />
 
                 <TextInput
-                  label="Category"
+                  label={t.sub_category.form.category}
                   name="category"
                   type="select"
                   classes={{
                     wrapper: "w-full max-w-sm",
-                    input: errors.category && touched.category ? "border-red-500" : "",
+                    input:
+                      errors.category && touched.category
+                        ? "border-red-500"
+                        : "",
                   }}
                 >
                   <>
-                    <option value="null">Please select category</option>
+                    <option value="null">
+                      {t.sub_category.form.category_option}
+                    </option>
                     {props.categories.map(({ id, name }) => (
                       <option key={id} value={id}>
                         {name}
@@ -141,7 +153,7 @@ const CreateSubCategory: NextPage<{
                     { disabled: !isValid || isValidating || isSubmitting },
                   ])}
                 >
-                  Create
+                  {t.buttons.create}
                 </button>
               </Form>
             )}
