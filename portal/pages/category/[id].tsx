@@ -10,10 +10,7 @@ import { CategoryService } from "@shared/services";
 
 import { ICategory } from "@types";
 import type { GetServerSideProps, NextPage } from "next";
-
-const ValidationSchema = Yup.object().shape({
-  name: Yup.string().required("Name is required"),
-});
+import { useTranslation } from "@shared/hooks";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const id = Number(ctx.params?.id);
@@ -37,6 +34,12 @@ const EditCategory: NextPage<{
   id: number;
   category?: ICategory;
 }> = (props) => {
+  const t = useTranslation();
+
+  const ValidationSchema = Yup.object().shape({
+    name: Yup.string().required(t.category.form.name_error_required),
+  });
+
   const handleOnSubmit = async (values: any) => {
     try {
       await CategoryService.update(props.category!.id!, values);
@@ -48,7 +51,10 @@ const EditCategory: NextPage<{
   if (!props.category) {
     return (
       <DefaultLayout>
-        <Error404 title="Category" message={`Category with ID-${props.id} not found! :(`} />
+        <Error404
+          title={t.category.headings.index}
+          message={t.category.messages.error_404}
+        />
       </DefaultLayout>
     );
   }
@@ -57,11 +63,11 @@ const EditCategory: NextPage<{
     <DefaultLayout>
       <>
         <Head>
-          <title>Category - Edit</title>
+          <title>{t.category.titles.edit}</title>
         </Head>
 
         <div className="prose">
-          <h1>Edit Category</h1>
+          <h1>{t.category.headings.edit}</h1>
         </div>
 
         <main className="my-4 p-4">
@@ -78,9 +84,9 @@ const EditCategory: NextPage<{
             {({ isSubmitting, isValidating, isValid, errors, touched }) => (
               <Form>
                 <TextInput
-                  label="Name"
+                  label={t.category.form.name}
                   name="name"
-                  placeholder="e.g. Reusable"
+                  placeholder={t.category.form.name_placeholder}
                   classes={{
                     wrapper: "max-w-sm",
                     input: errors.name && touched.name ? "border-red-500" : "",
@@ -96,7 +102,7 @@ const EditCategory: NextPage<{
                     { disabled: !isValid || isValidating || isSubmitting },
                   ])}
                 >
-                  Update
+                  {t.buttons.update}
                 </button>
               </Form>
             )}

@@ -6,23 +6,12 @@ import { toast } from "react-toastify";
 
 import DefaultLayout from "../../layouts/DefaultLayout";
 
-import { useRefresh } from "@shared/hooks";
+import { useRefresh, useTranslation } from "@shared/hooks";
 import { CategoryService, SubCategoryService } from "@shared/services";
 import { Table, SearchBar } from "@shared/components";
 
 import { GetServerSideProps, NextPage } from "next";
 import { ICategory, IErrors, IMeta } from "@types";
-
-const columns = [
-  {
-    Header: "Name",
-    accessor: "name",
-  },
-  {
-    Header: "Code",
-    accessor: "code",
-  },
-];
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   try {
@@ -43,12 +32,13 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   }
 };
 
-const SubCategory: NextPage<{
+const Category: NextPage<{
   categories: ICategory[];
   meta: IMeta;
   error?: IErrors;
 }> = (props) => {
   const { refresh: refreshSsrProps, router } = useRefresh();
+  const t = useTranslation();
   const rows: Array<ICategory> = useMemo(
     () =>
       props.categories.map(({ id, code, name }) => ({
@@ -59,10 +49,24 @@ const SubCategory: NextPage<{
     [props.categories]
   );
 
+  const columns = useMemo(
+    () => [
+      {
+        Header: t.table.name,
+        accessor: "name",
+      },
+      {
+        Header: t.table.code,
+        accessor: "code",
+      },
+    ],
+    [t]
+  );
+
   const handleOnDelete = async (row: ICategory) => {
     await CategoryService.remove(row.id!);
     refreshSsrProps();
-    toast.success("Sub-Category deleted successfully");
+    toast.success(t.category.messages.delete_success);
   };
 
   const handleOnEdit = (row: ICategory) => {
@@ -77,7 +81,7 @@ const SubCategory: NextPage<{
     <DefaultLayout>
       <>
         <Head>
-          <title>Cheffsheet - Categories</title>
+          <title>{t.category.titles.index}</title>
         </Head>
 
         <main className="mb-4">
@@ -86,11 +90,11 @@ const SubCategory: NextPage<{
           <div className="divider"></div>
           <div className="flex justify-between items-center mb-4s">
             <div className="prose my-4">
-              <h1>Categories</h1>
+              <h1>{t.category.headings.index}</h1>
             </div>
             <Link href="/category/create" passHref>
               <div className="btn btn-wide bg-indigo-500 text-white border-0">
-                Create
+                {t.buttons.create}
               </div>
             </Link>
           </div>
@@ -140,4 +144,4 @@ const SubCategory: NextPage<{
   );
 };
 
-export default SubCategory;
+export default Category;

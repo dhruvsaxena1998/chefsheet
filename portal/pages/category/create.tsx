@@ -11,23 +11,26 @@ import { CategoryService, CreateCategoryDTO } from "@shared/services";
 
 import type { GetServerSideProps, NextPage } from "next";
 import { ICategory, IErrors, IMeta } from "@types";
-
-const ValidationSchema = Yup.object().shape({
-  name: Yup.string().required("Name is required"),
-  code: Yup.string()
-    .matches(/^[A-Za-z0-9-_.~]*$/, "Invalid format")
-    .required("Code is required"),
-});
+import { useTranslation } from "@shared/hooks";
 
 const CreateCategory: NextPage<{
   categories: ICategory[];
   meta: IMeta;
   error?: IErrors;
 }> = (props) => {
+  const t = useTranslation();
+
+  const ValidationSchema = Yup.object().shape({
+    name: Yup.string().required(t.category.form.name_error_required),
+    code: Yup.string()
+      .matches(/^[A-Za-z0-9-_.~]*$/, t.category.form.code_error_invalid)
+      .required(t.category.form.code_error_required),
+  });
+
   const handleOnSubmit = async (values: CreateCategoryDTO) => {
     try {
       await CategoryService.create(values);
-      toast.success("Sub-Category created successfully");
+      toast.success(t.category.messages.create_success);
     } catch (e) {
       const error = e as any;
       const { data, status } = error?.response || {};
@@ -42,11 +45,11 @@ const CreateCategory: NextPage<{
     <DefaultLayout>
       <>
         <Head>
-          <title>Category - Create</title>
+          <title>{t.category.titles.create}</title>
         </Head>
 
         <div className="prose">
-          <h1>Create Category</h1>
+          <h1>{t.category.headings.create}</h1>
         </div>
 
         <main className="my-4 p-4">
@@ -64,9 +67,9 @@ const CreateCategory: NextPage<{
             {({ isSubmitting, isValidating, isValid, errors, touched }) => (
               <Form>
                 <TextInput
-                  label="Name"
+                  label={t.category.form.name}
                   name="name"
-                  placeholder="e.g. Reusable"
+                  placeholder={t.category.form.name_placeholder}
                   classes={{
                     wrapper: "max-w-sm",
                     input: errors.name && touched.name ? "border-red-500" : "",
@@ -74,10 +77,10 @@ const CreateCategory: NextPage<{
                 />
 
                 <TextInput
-                  label="Code"
-                  hint="This should be unique"
+                  label={t.category.form.code}
+                  hint={t.category.form.code_hint}
                   name="code"
-                  placeholder="e.g. Res-1"
+                  placeholder={t.category.form.code_placeholder}
                   classes={{
                     wrapper: "w-full max-w-sm",
                     input: errors.code && touched.code ? "border-red-500" : "",
@@ -93,7 +96,7 @@ const CreateCategory: NextPage<{
                     { disabled: !isValid || isValidating || isSubmitting },
                   ])}
                 >
-                  Create
+                  {t.buttons.create}
                 </button>
               </Form>
             )}

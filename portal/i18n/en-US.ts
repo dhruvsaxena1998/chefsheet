@@ -15,14 +15,41 @@ export const strings = {
   messages: {
     internal: "Something went wrong",
   },
-  sub_category: {
-    title: "Chefsheet - Sub Categories",
+  category: {
     titles: {
+      index: "Chefsheet - Categories",
+      create: "Category - Create",
+      edit: "Category - Edit",
+    },
+    headings: {
+      index: "Categories",
+      create: "Create Category",
+      edit: "Edit Category",
+    },
+    form: {
+      name: "Name",
+      name_placeholder: 'e.g. "Chicken"',
+      name_error_required: "Name is required",
+      code: "Code",
+      code_hint: "This should be unique",
+      code_placeholder: 'e.g. "chicken-1"',
+      code_error_invalid: "Invalid format",
+      code_error_required: "Code is required",
+    },
+    messages: {
+      create_success: "Category created successfully",
+      delete_success: "Category deleted sucessfully",
+      error_404: "Category not found :(",
+    },
+  },
+  sub_category: {
+    titles: {
+      index: "Chefsheet - Sub Categories",
       create: "SubCategory - Create",
       edit: "SubCategory - Edit",
     },
-    heading: "Sub - Categories",
     headings: {
+      index: "Sub - Categories",
       create: "Create Sub-Category",
       edit: "Edit Sub-Category",
     },
