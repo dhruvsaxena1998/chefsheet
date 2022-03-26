@@ -6,32 +6,12 @@ import { toast } from "react-toastify";
 
 import DefaultLayout from "../../layouts/DefaultLayout";
 
-import { useRefresh } from "@shared/hooks";
+import { useRefresh, useTranslation } from "@shared/hooks";
 import { SubCategoryService, UserService } from "@shared/services";
 import { Table, SearchBar } from "@shared/components";
 
 import { GetServerSideProps, NextPage } from "next";
 import { IErrors, IMeta, IUser } from "@types";
-
-const columns = [
-  {
-    Header: "",
-    accessor: "profile_image",
-  },
-  {
-    Header: "Name",
-    accessor: "name",
-  },
-  {
-    Header: "Contact Number",
-    accessor: "contact_number",
-  },
-  {
-    Header: "Role",
-    accessor: "role",
-    capitalize: true,
-  },
-];
 
 interface UsersRow {
   id?: number;
@@ -67,6 +47,8 @@ const Users: NextPage<{
   error?: IErrors;
 }> = (props) => {
   const { refresh: refreshSsrProps, router } = useRefresh();
+  const t = useTranslation();
+
   const rows: UsersRow[] = useMemo(
     () =>
       props.users.map(({ id, name, contact_number, role }) => ({
@@ -78,10 +60,33 @@ const Users: NextPage<{
     [props.users]
   );
 
+  const columns = useMemo(
+    () => [
+      {
+        Header: "",
+        accessor: "profile_image",
+      },
+      {
+        Header: t.users.table.name,
+        accessor: "name",
+      },
+      {
+        Header: t.users.table.contact_number,
+        accessor: "contact_number",
+      },
+      {
+        Header: t.users.table.role,
+        accessor: "role",
+        capitalize: true,
+      },
+    ],
+    [t]
+  );
+
   const handleOnDelete = async (row: UsersRow) => {
     await SubCategoryService.remove(row.id!);
     refreshSsrProps();
-    toast.success("User deleted successfully");
+    toast.success(t.users.messages.delete_success);
   };
 
   const handleOnEdit = (row: UsersRow) => {
@@ -96,7 +101,7 @@ const Users: NextPage<{
     <DefaultLayout>
       <>
         <Head>
-          <title>Cheffsheet - Sub Categories</title>
+          <title>{t.users.titles.index}</title>
         </Head>
 
         <main className="mb-4">
@@ -105,11 +110,11 @@ const Users: NextPage<{
           <div className="divider"></div>
           <div className="flex justify-between items-center mb-4s">
             <div className="prose my-4">
-              <h1>Users</h1>
+              <h1>{t.users.headings.index}</h1>
             </div>
             <Link href="/sub-category/create" passHref>
               <div className="btn btn-wide bg-indigo-500 text-white border-0">
-                Create
+                {t.buttons.create}
               </div>
             </Link>
           </div>

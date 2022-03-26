@@ -6,18 +6,12 @@ import { Formik, Form } from "formik";
 
 import DefaultLayout from "../../layouts/DefaultLayout";
 import { Error404, TextInput } from "shared/components";
-import { SubCategoryService, UserService } from "@shared/services";
+import { UserService } from "@shared/services";
 
-import { ISubCategory, IUser } from "@types";
+import { IUser } from "@types";
 import type { GetServerSideProps, NextPage } from "next";
-
-const ValidationSchema = Yup.object().shape({
-  name: Yup.string().required("Name is required"),
-  email: Yup.string().email("Invalid email").required("Email is required"),
-  contact_number: Yup.string()
-    .matches(/^[0-9]{10}$/, "Invalid contact number")
-    .required("Contact number is required"),
-});
+import { useMemo } from "react";
+import { useTranslation } from "@shared/hooks";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const id = Number(ctx.params?.id);
@@ -43,6 +37,22 @@ const EditUser: NextPage<{
   id: number;
   user?: IUser;
 }> = (props) => {
+  const t = useTranslation();
+
+  const ValidationSchema = useMemo(
+    () =>
+      Yup.object().shape({
+        name: Yup.string().required(t.users.form.name_error_required),
+        email: Yup.string()
+          .email(t.users.form.email_error_invalid)
+          .required(t.users.form.email_error_required),
+        contact_number: Yup.string()
+          .matches(/^[0-9]{10}$/, t.users.form.contact_number_error_invalid)
+          .required(t.users.form.contact_number_error_required),
+      }),
+    [t]
+  );
+
   const handleOnSubmit = async (values: any) => {
     try {
       await UserService.update(props.user!.id!, {
@@ -58,8 +68,8 @@ const EditUser: NextPage<{
     return (
       <DefaultLayout>
         <Error404
-          title="Users"
-          message={`User with ID-${props.id} not found! :(`}
+          title={t.users.headings.index}
+          message={t.users.messages.error_404}
         />
       </DefaultLayout>
     );
@@ -69,11 +79,11 @@ const EditUser: NextPage<{
     <DefaultLayout>
       <>
         <Head>
-          <title>User - Edit</title>
+          <title>{t.users.titles.edit}</title>
         </Head>
 
         <div className="prose">
-          <h1>Edit User</h1>
+          <h1>{t.users.headings.edit}</h1>
         </div>
         <main className="my-4 p-4">
           <Formik
@@ -91,9 +101,9 @@ const EditUser: NextPage<{
             {({ isSubmitting, isValidating, isValid, errors, touched }) => (
               <Form>
                 <TextInput
-                  label="Name"
+                  label={t.users.form.name}
                   name="name"
-                  placeholder="e.g. Reusable"
+                  placeholder={t.users.form.name_placeholder}
                   classes={{
                     wrapper: "max-w-sm",
                     input: errors.name && touched.name ? "border-red-500" : "",
@@ -101,8 +111,9 @@ const EditUser: NextPage<{
                 />
 
                 <TextInput
-                  label="Email"
+                  label={t.users.form.email}
                   name="email"
+                  placeholder={t.users.form.email_placeholder}
                   disabled={true}
                   classes={{
                     wrapper: "max-w-sm",
@@ -111,10 +122,10 @@ const EditUser: NextPage<{
                 />
 
                 <TextInput
-                  label="Contact Number"
+                  label={t.users.form.contact_number}
                   name="contact_number"
                   type="number"
-                  placeholder="e.g. Reusable"
+                  placeholder={t.users.form.contact_number_placeholder}
                   classes={{
                     wrapper: "max-w-sm",
                     input: errors.name && touched.name ? "border-red-500" : "",
@@ -130,7 +141,7 @@ const EditUser: NextPage<{
                     { disabled: !isValid || isValidating || isSubmitting },
                   ])}
                 >
-                  Update
+                  {t.buttons.update}
                 </button>
               </Form>
             )}

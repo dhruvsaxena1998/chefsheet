@@ -1,12 +1,20 @@
 export const strings = {
-  logout: "Logout",
-  search: "Search",
   chefsheet: "Chefsheet",
   buttons: {
     create: "Create",
     update: "Update",
     edit: "Edit",
     delete: "Delete",
+    search: "Search",
+    logout: "Logout",
+  },
+  options: {
+    search: "Search",
+    categories: "Categories",
+    sub_categories: "Sub Categories",
+    items: "Items",
+    staff: "Staff Members",
+    users: "Users",
   },
   table: {
     name: "Name",
@@ -119,5 +127,8 @@ export const strings = {
       delete_success: "Sub-Category deleted sucessfully",
       error_404: "Sub-Category not found :(",
     },
+  },
+  misc: {
+    pick_category: "Pick a category",
   },
 };

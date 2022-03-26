@@ -7,7 +7,12 @@ export type SideBarItems =
   | "staff"
   | "users";
 
-export type SearchOptions = "all" | "category" | "sub-category" | "staff";
+export type SearchOptions =
+  | "all"
+  | "category"
+  | "items"
+  | "sub-category"
+  | "staff";
 
 export interface Pagination {
   page?: number;

@@ -1,11 +1,12 @@
 import clsx from "clsx";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useRouter } from "next/router";
 
 import { IconType } from "react-icons";
 import { BiCategory, BiCategoryAlt, BiSearchAlt } from "react-icons/bi";
 
 import { SideBarItems } from "@types";
+import { useTranslation } from "@shared/hooks";
 
 type SideBar = {
   name: string;
@@ -13,17 +14,26 @@ type SideBar = {
   icon: IconType;
 };
 
-const sideBarData: SideBar[] = [
-  { name: "Search", slug: "search", icon: BiSearchAlt },
-  { name: "Categories", slug: "category", icon: BiCategory },
-  { name: "Sub-Categories", slug: "sub-category", icon: BiCategoryAlt },
-  { name: "Items", slug: "items", icon: BiCategoryAlt },
-  { name: "Staff", slug: "staff", icon: BiCategoryAlt },
-  { name: "Users", slug: "users", icon: BiCategoryAlt },
-];
-
 export const Sidebar = () => {
   const router = useRouter();
+  const t = useTranslation();
+
+  const sideBarData: SideBar[] = useMemo(
+    () => [
+      { name: t.options.search, slug: "search", icon: BiSearchAlt },
+      { name: t.options.categories, slug: "category", icon: BiCategory },
+      {
+        name: t.options.sub_categories,
+        slug: "sub-category",
+        icon: BiCategoryAlt,
+      },
+      { name: t.options.items, slug: "items", icon: BiCategoryAlt },
+      { name: t.options.staff, slug: "staff", icon: BiCategoryAlt },
+      { name: t.options.users, slug: "users", icon: BiCategoryAlt },
+    ],
+    [t]
+  );
+
   const [active, setActive] = useState<SideBarItems>(
     router.asPath.split("/")[1] as SideBarItems
   );

@@ -1,3 +1,5 @@
+import { useTranslation } from "@shared/hooks";
+import { useMemo } from "react";
 import { SearchOptions } from "../../types";
 
 export type ISearchBarOptions = {
@@ -5,23 +7,29 @@ export type ISearchBarOptions = {
   label: string;
 };
 
-const options: ISearchBarOptions[] = [
-  { value: "category", label: "Categories" },
-  {
-    value: "sub-category",
-    label: "Sub-Categories",
-  },
-  {
-    value: "staff",
-    label: "Staff",
-  },
-];
-
 export interface ISearchBarProps {
   slug?: SearchOptions;
 }
 
 export const SearchBar = ({ slug = "all" }: ISearchBarProps) => {
+  const t = useTranslation();
+
+  const options: ISearchBarOptions[] = useMemo(
+    () => [
+      { value: "category", label: t.options.categories },
+      {
+        value: "sub-category",
+        label: t.options.sub_categories,
+      },
+      { value: "items", label: t.options.items },
+      {
+        value: "staff",
+        label: t.options.staff,
+      },
+    ],
+    [t]
+  );
+
   return (
     <div className="form-control">
       <div className="input-group">
@@ -29,7 +37,7 @@ export const SearchBar = ({ slug = "all" }: ISearchBarProps) => {
           {slug === "all" ? (
             <>
               <option disabled value="all">
-                Pick category
+                {t.misc.pick_category}
               </option>
               {options.map(({ value, label }) => (
                 <option key={value} value={value}>
@@ -49,7 +57,7 @@ export const SearchBar = ({ slug = "all" }: ISearchBarProps) => {
           className={"input bg-base-300 w-full rounded-lg"}
         />
         <button className="btn btn-wide bg-base-200 tracking-wider border-0">
-          Search
+          {t.buttons.search}
         </button>
       </div>
     </div>

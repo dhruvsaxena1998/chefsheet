@@ -1,16 +1,26 @@
 export const strings = {
-  logout: "Logout",
-  search: "Search",
   chefsheet: "Chefsheet",
   buttons: {
     create: "Create",
     update: "Update",
     edit: "Edit",
     delete: "Delete",
+    search: "Search",
+    logout: "Logout",
+    back: "Go Back",
+  },
+  options: {
+    search: "Search",
+    categories: "Categories",
+    sub_categories: "Sub Categories",
+    items: "Items",
+    staff: "Staff Members",
+    users: "Users",
   },
   table: {
     name: "Name",
     code: "Code",
+    actions: "Actions",
   },
   messages: {
     internal: "Something went wrong",
@@ -119,5 +129,44 @@ export const strings = {
       delete_success: "Sub-Category deleted sucessfully",
       error_404: "Sub-Category not found :(",
     },
+  },
+  users: {
+    titles: {
+      index: "Cheffsheet - Users",
+      create: "Users - Create",
+      edit: "Users - Edit",
+    },
+    headings: {
+      index: "Users",
+      create: "Create User",
+      edit: "Edit User",
+    },
+    table: {
+      name: "Name",
+      contact_number: "Contact Number",
+      role: "Role",
+    },
+    form: {
+      name: "Name",
+      name_placeholder: 'e.g. "Chicken"',
+      name_error_required: "Name is required",
+      email: "Email",
+      email_placeholder: 'e.g. "someone@example.com"',
+      email_error_invalid: "Invalid email",
+      email_error_required: "Email is required",
+      contact_number: "Contact Number",
+      contact_number_placeholder: 'e.g. "1234567890"',
+      contact_number_error_invalid: "Invalid contact number",
+      contact_number_error_required: "Contact number is required",
+    },
+    messages: {
+      create_success: "User created successfully",
+      update_success: "User updated successfully",
+      delete_success: "User deleted sucessfully",
+      error_404: "User not found :(",
+    },
+  },
+  misc: {
+    pick_category: "Pick a category",
   },
 };

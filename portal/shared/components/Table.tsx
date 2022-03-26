@@ -1,3 +1,4 @@
+import { useTranslation } from "@shared/hooks";
 import clsx from "clsx";
 import { useMemo } from "react";
 import { Row, useTable } from "react-table";
@@ -22,6 +23,7 @@ export interface ITableProps {
 }
 
 export const Table = (props: ITableProps) => {
+  const t = useTranslation();
   const { classes = {} } = props;
 
   const columns = useMemo(() => props.columns, [props.columns]);
@@ -67,7 +69,7 @@ export const Table = (props: ITableProps) => {
               ))}
               {props.actions && (
                 <th key="thead-actions" className="text-right">
-                  Actions
+                  {t.table.actions}
                 </th>
               )}
             </tr>
@@ -111,7 +113,7 @@ export const Table = (props: ITableProps) => {
                         }
                         className={clsx(["btn btn-xs", actionBtnClsx(action)])}
                       >
-                        {action}
+                        {t.buttons[action]}
                       </button>
                     ))}
                   </td>
