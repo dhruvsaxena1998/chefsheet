@@ -61,9 +61,10 @@
     "gender": {
       "type": "enumeration",
       "enum": [
-        "Male",
-        "Female",
-        "Prefer not to say"
+        "male",
+        "female",
+        "other",
+        "prefer_not_to_say"
       ]
     },
     "contact_number": {
