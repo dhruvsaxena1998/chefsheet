@@ -5,7 +5,7 @@ import * as Yup from "yup";
 import { toast } from "react-toastify";
 import NProgress from "nprogress";
 import { Formik, Form } from "formik";
-import { ChangeEvent, useCallback, useEffect, useState } from "react";
+import { ChangeEvent, useCallback, useEffect, useMemo, useState } from "react";
 
 import DefaultLayout from "../../layouts/DefaultLayout";
 import { Error404, TextInput } from "@shared/components";
@@ -92,30 +92,34 @@ const EditItem: NextPage<{
     handleCategoryChange(props.item?.category?.data?.id!);
   }, [handleCategoryChange, props.item]);
 
-  const ValidationSchema = Yup.object().shape({
-    name: Yup.string().required("Name is required"),
-    description: Yup.string().min(10),
-    quantity: Yup.number()
-      .moreThan(0, t.items.form.quantity_error_min)
-      .required(t.items.form.quantity_error_required),
-    expiration_date: Yup.date()
-      .min(new Date(), t.items.form.expiration_date_error_min)
-      .required(t.items.form.expiration_date_error_required),
-    category: Yup.string()
-      .required(t.items.form.category_error_required)
-      .test(
-        "invalid",
-        t.items.form.category_error_invalid,
-        (value) => value !== "null"
-      ),
-    sub_category: Yup.string()
-      .required(t.items.form.sub_category_error_required)
-      .test(
-        "invalid",
-        t.items.form.sub_category_error_invalid,
-        (value) => value !== "null"
-      ),
-  });
+  const ValidationSchema = useMemo(
+    () =>
+      Yup.object().shape({
+        name: Yup.string().required("Name is required"),
+        description: Yup.string().min(10),
+        quantity: Yup.number()
+          .moreThan(0, t.items.form.quantity_error_min)
+          .required(t.items.form.quantity_error_required),
+        expiration_date: Yup.date()
+          .min(new Date(), t.items.form.expiration_date_error_min)
+          .required(t.items.form.expiration_date_error_required),
+        category: Yup.string()
+          .required(t.items.form.category_error_required)
+          .test(
+            "invalid",
+            t.items.form.category_error_invalid,
+            (value) => value !== "null"
+          ),
+        sub_category: Yup.string()
+          .required(t.items.form.sub_category_error_required)
+          .test(
+            "invalid",
+            t.items.form.sub_category_error_invalid,
+            (value) => value !== "null"
+          ),
+      }),
+    [t]
+  );
 
   const handleOnSubmit = async (values: ItemsDTO) => {
     NProgress.start();

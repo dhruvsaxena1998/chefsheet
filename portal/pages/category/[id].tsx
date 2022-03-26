@@ -11,6 +11,7 @@ import { CategoryService } from "@shared/services";
 import { ICategory } from "@types";
 import type { GetServerSideProps, NextPage } from "next";
 import { useTranslation } from "@shared/hooks";
+import { useMemo } from "react";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const id = Number(ctx.params?.id);
@@ -36,9 +37,13 @@ const EditCategory: NextPage<{
 }> = (props) => {
   const t = useTranslation();
 
-  const ValidationSchema = Yup.object().shape({
-    name: Yup.string().required(t.category.form.name_error_required),
-  });
+  const ValidationSchema = useMemo(
+    () =>
+      Yup.object().shape({
+        name: Yup.string().required(t.category.form.name_error_required),
+      }),
+    [t]
+  );
 
   const handleOnSubmit = async (values: any) => {
     try {

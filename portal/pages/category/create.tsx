@@ -2,16 +2,17 @@ import clsx from "clsx";
 import Head from "next/head";
 
 import * as Yup from "yup";
+import { useMemo } from "react";
 import { Formik, Form } from "formik";
 import { toast } from "react-toastify";
 
 import DefaultLayout from "../../layouts/DefaultLayout";
 import { TextInput } from "@shared/components";
+import { useTranslation } from "@shared/hooks";
 import { CategoryService, CreateCategoryDTO } from "@shared/services";
 
-import type { GetServerSideProps, NextPage } from "next";
+import type { NextPage } from "next";
 import { ICategory, IErrors, IMeta } from "@types";
-import { useTranslation } from "@shared/hooks";
 
 const CreateCategory: NextPage<{
   categories: ICategory[];
@@ -20,12 +21,16 @@ const CreateCategory: NextPage<{
 }> = (props) => {
   const t = useTranslation();
 
-  const ValidationSchema = Yup.object().shape({
-    name: Yup.string().required(t.category.form.name_error_required),
-    code: Yup.string()
-      .matches(/^[A-Za-z0-9-_.~]*$/, t.category.form.code_error_invalid)
-      .required(t.category.form.code_error_required),
-  });
+  const ValidationSchema = useMemo(
+    () =>
+      Yup.object().shape({
+        name: Yup.string().required(t.category.form.name_error_required),
+        code: Yup.string()
+          .matches(/^[A-Za-z0-9-_.~]*$/, t.category.form.code_error_invalid)
+          .required(t.category.form.code_error_required),
+      }),
+    [t]
+  );
 
   const handleOnSubmit = async (values: CreateCategoryDTO) => {
     try {

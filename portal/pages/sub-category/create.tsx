@@ -16,6 +16,7 @@ import {
 import type { GetServerSideProps, NextPage } from "next";
 import { ICategory, IErrors, IMeta } from "@types";
 import { useTranslation } from "@shared/hooks";
+import { useMemo } from "react";
 
 export const getServerSideProps: GetServerSideProps = async () => {
   try {
@@ -60,19 +61,23 @@ const CreateSubCategory: NextPage<{
     }
   };
 
-  const ValidationSchema = Yup.object().shape({
-    name: Yup.string().required(t.sub_category.form.name_error_required),
-    code: Yup.string()
-      .matches(/^[A-Za-z0-9-_.~]*$/, t.sub_category.form.code_error_invalid)
-      .required(t.sub_category.form.code_error_required),
-    category: Yup.string()
-      .required(t.sub_category.form.category_error_required)
-      .test(
-        "invalid",
-        t.sub_category.form.category_error_invalid,
-        (value) => value !== "null"
-      ),
-  });
+  const ValidationSchema = useMemo(
+    () =>
+      Yup.object().shape({
+        name: Yup.string().required(t.sub_category.form.name_error_required),
+        code: Yup.string()
+          .matches(/^[A-Za-z0-9-_.~]*$/, t.sub_category.form.code_error_invalid)
+          .required(t.sub_category.form.code_error_required),
+        category: Yup.string()
+          .required(t.sub_category.form.category_error_required)
+          .test(
+            "invalid",
+            t.sub_category.form.category_error_invalid,
+            (value) => value !== "null"
+          ),
+      }),
+    [t]
+  );
 
   return (
     <DefaultLayout>
