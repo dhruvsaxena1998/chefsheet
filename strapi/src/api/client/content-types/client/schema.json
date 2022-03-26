@@ -28,12 +28,6 @@
     "settings": {
       "type": "json"
     },
-    "manager": {
-      "type": "relation",
-      "relation": "manyToOne",
-      "target": "plugin::users-permissions.user",
-      "inversedBy": "clients"
-    },
     "address": {
       "type": "component",
       "repeatable": false,

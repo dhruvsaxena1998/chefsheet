@@ -14,12 +14,6 @@
     "name": {
       "type": "string"
     },
-    "user": {
-      "type": "relation",
-      "relation": "manyToOne",
-      "target": "plugin::users-permissions.user",
-      "inversedBy": "inventories"
-    },
     "items": {
       "type": "relation",
       "relation": "oneToMany",

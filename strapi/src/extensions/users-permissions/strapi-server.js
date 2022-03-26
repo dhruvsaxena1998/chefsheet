@@ -4,7 +4,9 @@ module.exports = (plugin) => {
     const {
       password,
       resetPasswordToken,
+      reset_password_token,
       confirmationToken,
+      confirmation_token,
       ...sanitizedUser
     } = user; // be careful, you need to omit other private attributes yourself
     return sanitizedUser;
@@ -17,20 +19,19 @@ module.exports = (plugin) => {
     const user = await strapi.entityService.findOne(
       "plugin::users-permissions.user",
       ctx.state.user.id,
-      { populate: ["role"] }
+      { populate: ["admin"] }
     );
 
-    ctx.body = sanitizeOutput(user);
-  };
+    const { admin, ...rest } = sanitizeOutput(user);
 
-  plugin.controllers.user.find = async (ctx) => {
-    const users = await strapi.entityService.findMany(
-      "plugin::users-permissions.user",
-      { ...ctx.params, populate: ["role"] }
-    );
-    console.log(users)
-
-    ctx.body = users.map((user) => sanitizeOutput(user));
+    ctx.body = {
+      ...sanitizeOutput(admin),
+      user: {
+        data: {
+          ...rest,
+        },
+      },
+    };
   };
 
   return plugin;
