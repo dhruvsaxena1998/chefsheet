@@ -18,23 +18,7 @@ import {
 
 import type { GetServerSideProps, NextPage } from "next";
 import { ICategory, IErrors, IMeta, ISubCategory } from "@types";
-
-const ValidationSchema = Yup.object().shape({
-  name: Yup.string().required("Name is required"),
-  description: Yup.string().min(10),
-  quantity: Yup.number()
-    .moreThan(0, "Quantity must be greater than 0")
-    .required("Quantity is required"),
-  expiration_date: Yup.date()
-    .min(new Date(), "Expiration date must be in the future")
-    .required("Expiration date is required"),
-  category: Yup.string()
-    .required("Category is required")
-    .test("invalid", "Category is invalid", (value) => value !== "null"),
-  sub_category: Yup.string()
-    .required("Sub-Category is required")
-    .test("invalid", "Sub-Category is invalid", (value) => value !== "null"),
-});
+import { useTranslation } from "@shared/hooks";
 
 export const getServerSideProps: GetServerSideProps = async () => {
   try {
@@ -63,6 +47,8 @@ const CreateItem: NextPage<{
   meta: IMeta;
   error?: IErrors;
 }> = (props) => {
+  const t = useTranslation();
+
   const [subCategories, setSubCategories] = useState<ISubCategory[]>([]);
 
   const handleCategoryChange = async (categoryId: number) => {
@@ -84,7 +70,7 @@ const CreateItem: NextPage<{
       const { data: subCategories } = data;
       setSubCategories(subCategories);
     } catch (e) {
-      toast.error("Something went wrong");
+      toast.error(t.messages.internal);
     } finally {
       NProgress.done();
     }
@@ -94,7 +80,7 @@ const CreateItem: NextPage<{
     NProgress.start();
     try {
       await ItemService.create(values);
-      toast.success("Item created successfully");
+      toast.success(t.items.messages.create_success);
     } catch (e) {
       const error = e as any;
       const { data, status } = error?.response || {};
@@ -107,15 +93,40 @@ const CreateItem: NextPage<{
     }
   };
 
+  const ValidationSchema = Yup.object().shape({
+    name: Yup.string().required("Name is required"),
+    description: Yup.string().min(10),
+    quantity: Yup.number()
+      .moreThan(0, t.items.form.quantity_error_min)
+      .required(t.items.form.quantity_error_required),
+    expiration_date: Yup.date()
+      .min(new Date(), t.items.form.expiration_date_error_min)
+      .required(t.items.form.expiration_date_error_required),
+    category: Yup.string()
+      .required(t.items.form.category_error_required)
+      .test(
+        "invalid",
+        t.items.form.category_error_invalid,
+        (value) => value !== "null"
+      ),
+    sub_category: Yup.string()
+      .required(t.items.form.sub_category_error_required)
+      .test(
+        "invalid",
+        t.items.form.sub_category_error_invalid,
+        (value) => value !== "null"
+      ),
+  });
+
   return (
     <DefaultLayout>
       <>
         <Head>
-          <title>Items - Create</title>
+          <title>{t.items.titles.create}</title>
         </Head>
 
         <div className="prose">
-          <h1>Create Items</h1>
+          <h1>{t.items.headings.create}</h1>
         </div>
 
         <main className="my-4 p-4">
@@ -139,9 +150,9 @@ const CreateItem: NextPage<{
                 <div className="flex justify-start gap-8">
                   <div className="w-96">
                     <TextInput
-                      label="Name"
+                      label={t.items.form.name}
                       name="name"
-                      placeholder="e.g. Reusable"
+                      placeholder={t.items.form.name_placeholder}
                       classes={{
                         wrapper: "w-full max-w-sm",
                         input:
@@ -149,9 +160,9 @@ const CreateItem: NextPage<{
                       }}
                     />
                     <TextInput
-                      label="Quantity"
+                      label={t.items.form.quantity}
                       name="quantity"
-                      placeholder="e.g. 100"
+                      placeholder={t.items.form.quantity_placeholder}
                       type="number"
                       classes={{
                         wrapper: "w-full max-w-sm",
@@ -163,9 +174,9 @@ const CreateItem: NextPage<{
                     />
 
                     <TextInput
-                      label="Expiration Date"
+                      label={t.items.form.expiration_date}
                       name="expiration_date"
-                      placeholder="e.g. 100"
+                      placeholder={t.items.form.expiration_date_placeholder}
                       type="date"
                       classes={{
                         wrapper: "w-full max-w-sm",
@@ -177,7 +188,7 @@ const CreateItem: NextPage<{
                     />
 
                     <TextInput
-                      label="Category"
+                      label={t.items.form.category}
                       name="category"
                       type="select"
                       classes={{
@@ -192,7 +203,9 @@ const CreateItem: NextPage<{
                       }}
                     >
                       <>
-                        <option value="null">Please select category</option>
+                        <option value="null">
+                          {t.items.form.category_option}
+                        </option>
                         {props.categories.map(({ id, name }) => (
                           <option key={id} value={id}>
                             {name}
@@ -202,7 +215,7 @@ const CreateItem: NextPage<{
                     </TextInput>
 
                     <TextInput
-                      label="Sub Category"
+                      label={t.items.form.sub_category}
                       name="sub_category"
                       type="select"
                       disabled={subCategories.length === 0}
@@ -215,7 +228,9 @@ const CreateItem: NextPage<{
                       }}
                     >
                       <>
-                        <option value="null">Please select sub category</option>
+                        <option value="null">
+                          {t.items.form.sub_category_option}
+                        </option>
                         {subCategories.map(({ id, name }) => (
                           <option key={id} value={id}>
                             {name}
@@ -226,9 +241,9 @@ const CreateItem: NextPage<{
                   </div>
                   <div className="flex-1">
                     <TextInput
-                      label="Description"
+                      label={t.items.form.description}
                       name="description"
-                      placeholder="e.g. lorem ipsum"
+                      placeholder={t.items.form.description_placeholder}
                       type="textarea"
                       classes={{
                         wrapper: "",
@@ -250,7 +265,7 @@ const CreateItem: NextPage<{
                     { disabled: !isValid || isValidating || isSubmitting },
                   ])}
                 >
-                  Create
+                  {t.buttons.create}
                 </button>
               </Form>
             )}

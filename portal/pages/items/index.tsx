@@ -6,35 +6,12 @@ import { toast } from "react-toastify";
 
 import DefaultLayout from "../../layouts/DefaultLayout";
 
-import { useRefresh } from "@shared/hooks";
+import { useRefresh, useTranslation } from "@shared/hooks";
 import { ItemService } from "@shared/services";
 import { Table, SearchBar } from "@shared/components";
 
 import { GetServerSideProps, NextPage } from "next";
 import { IErrors, IMeta, Items } from "@types";
-
-const columns = [
-  {
-    Header: "Name",
-    accessor: "name",
-  },
-  {
-    Header: "Quantity",
-    accessor: "quantity",
-  },
-  {
-    Header: "Expiry Date",
-    accessor: "expiration_date",
-  },
-  {
-    Header: "Category",
-    accessor: "category",
-  },
-  {
-    Header: "Sub-Category",
-    accessor: "sub_category",
-  },
-];
 
 interface SubCategoryRow {
   id?: number;
@@ -71,6 +48,8 @@ const Items: NextPage<{
   error?: IErrors;
 }> = (props) => {
   const { refresh: refreshSsrProps, router } = useRefresh();
+  const t = useTranslation();
+
   const rows: SubCategoryRow[] = useMemo(
     () =>
       props.items.map(
@@ -95,10 +74,36 @@ const Items: NextPage<{
     [props.items]
   );
 
+  const columns = useMemo(
+    () => [
+      {
+        Header: t.items.form.name,
+        accessor: "name",
+      },
+      {
+        Header: t.items.form.quantity,
+        accessor: "quantity",
+      },
+      {
+        Header: t.items.form.expiration_date,
+        accessor: "expiration_date",
+      },
+      {
+        Header: t.items.form.category,
+        accessor: "category",
+      },
+      {
+        Header: t.items.form.sub_category,
+        accessor: "sub_category",
+      },
+    ],
+    [t]
+  );
+
   const handleOnDelete = async (row: SubCategoryRow) => {
     await ItemService.remove(row.id!);
     refreshSsrProps();
-    toast.success("Item deleted successfully");
+    toast.success(t.items.messages.delete_success);
   };
 
   const handleOnEdit = (row: SubCategoryRow) => {
@@ -113,7 +118,7 @@ const Items: NextPage<{
     <DefaultLayout>
       <>
         <Head>
-          <title>Cheffsheet - Items</title>
+          <title>{t.items.titles.index}</title>
         </Head>
 
         <main className="mb-4">
@@ -122,11 +127,11 @@ const Items: NextPage<{
           <div className="divider"></div>
           <div className="flex justify-between items-center mb-4s">
             <div className="prose my-4">
-              <h1>Items</h1>
+              <h1>{t.items.headings.index}</h1>
             </div>
             <Link href="/items/create" passHref>
               <div className="btn btn-wide bg-indigo-500 text-white border-0">
-                Create
+                {t.buttons.create}
               </div>
             </Link>
           </div>
