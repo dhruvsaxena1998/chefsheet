@@ -25,7 +25,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   try {
     const { page = 1 } = ctx.query;
     const { data } = await UserService.find({
-      populate: ["profile_image"],
+      populate: ["profile_image", "user"],
       pagination: {
         page,
       },

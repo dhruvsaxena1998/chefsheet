@@ -19,7 +19,13 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   try {
     const { data } = await UserService.findOne(id, {
-      populate: ["profile_image", "clients", "inventories", "staff_members"],
+      populate: [
+        "profile_image",
+        "clients",
+        "inventories",
+        "staff_members",
+        "user",
+      ],
     });
 
     const { data: user } = data;

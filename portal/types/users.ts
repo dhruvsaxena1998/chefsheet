@@ -1,7 +1,18 @@
 import { IProfileImage } from "./profile_image";
 
+export interface StrapiUser {
+  blocked: boolean;
+  confirmed: boolean;
+  username: string;
+  email: string;
+  id?: number;
+  provider: "local";
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export interface IUser {
-  id?: 1;
+  id?: number;
   username: string;
   email: string;
   name: string;
@@ -17,13 +28,16 @@ export interface IUser {
   profile_image?: {
     data: IProfileImage;
   };
-  clients: {
+  clients?: {
     data: {};
   };
-  staff_members: {
+  staff_members?: {
     data: {};
   };
-  inventories: {
+  inventories?: {
     data: {};
+  };
+  user?: {
+    data: StrapiUser;
   };
 }
