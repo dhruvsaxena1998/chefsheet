@@ -112,7 +112,7 @@ const Users: NextPage<{
             <div className="prose my-4">
               <h1>{t.users.headings.index}</h1>
             </div>
-            <Link href="/sub-category/create" passHref>
+            <Link href="/users/create" passHref>
               <div className="btn btn-wide bg-indigo-500 text-white border-0">
                 {t.buttons.create}
               </div>

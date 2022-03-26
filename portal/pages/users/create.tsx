@@ -8,36 +8,15 @@ import DefaultLayout from "../../layouts/DefaultLayout";
 import { Error404, TextInput } from "shared/components";
 import { UserService } from "@shared/services";
 
-import { IUser } from "@types";
+import { IErrors, IUser } from "@types";
 import type { GetServerSideProps, NextPage } from "next";
 import { useMemo } from "react";
 import { useTranslation } from "@shared/hooks";
 import { toast } from "react-toastify";
+import { useRouter } from "next/router";
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const id = Number(ctx.params?.id);
-
-  try {
-    const { data } = await UserService.findOne(id, {
-      populate: ["profile_image", "clients", "inventories", "staff_members"],
-    });
-
-    const { data: user } = data;
-    return {
-      props: {
-        id,
-        user,
-      },
-    };
-  } catch (e) {
-    return { props: { id, user: null } };
-  }
-};
-
-const EditUser: NextPage<{
-  id: number;
-  user?: IUser;
-}> = (props) => {
+const CreateUser: NextPage = () => {
+  const router = useRouter();
   const t = useTranslation();
 
   const ValidationSchema = useMemo(
@@ -62,54 +41,53 @@ const EditUser: NextPage<{
         role: Yup.string()
           .oneOf(["admin", "editor", "viewer"], t.users.form.role_error_onOf)
           .required(t.users.form.role_error_required),
+        password: Yup.string()
+          .min(6, t.users.form.password_error_min)
+          .required(t.users.form.password_error_required),
       }),
     [t]
   );
 
   const handleOnSubmit = async (values: any) => {
     try {
-      await UserService.update(props.user!.id!, {
+      await UserService.create({
         ...values,
+        username: values.email,
         contact_number: String(values.contact_number),
       });
-      toast.success(t.users.messages.update_success);
+      toast.success(t.users.messages.create_success);
+      router.back();
     } catch (e) {
-      console.error(e);
+      const error = e as any;
+      console.log(error)
+      const { data, status } = error?.response || {};
+      if (status === 400) {
+        const { message } = data?.error as IErrors;
+        toast.error(message);
+      }
     }
   };
-
-  const { user } = props;
-
-  if (!user) {
-    return (
-      <DefaultLayout>
-        <Error404
-          title={t.users.headings.index}
-          message={t.users.messages.error_404}
-        />
-      </DefaultLayout>
-    );
-  }
 
   return (
     <DefaultLayout>
       <>
         <Head>
-          <title>{t.users.titles.edit}</title>
+          <title>{t.users.titles.create}</title>
         </Head>
 
         <div className="prose">
-          <h1>{t.users.headings.edit}</h1>
+          <h1>{t.users.headings.create}</h1>
         </div>
         <main className="my-4 p-4">
           <Formik
             initialValues={{
-              name: user.name || "",
-              email: user.email || "",
-              country_code: user.country_code || "+91",
-              contact_number: user.contact_number || "",
-              gender: user.gender || "null",
-              role: user.role || "editor",
+              name: "",
+              email: "",
+              password: "",
+              country_code: "+91",
+              contact_number: "",
+              gender: "null",
+              role: "editor",
             }}
             onSubmit={handleOnSubmit}
             validationSchema={ValidationSchema}
@@ -133,11 +111,24 @@ const EditUser: NextPage<{
                   label={t.users.form.email}
                   name="email"
                   placeholder={t.users.form.email_placeholder}
-                  disabled
                   classes={{
                     wrapper: "max-w-sm",
                     input:
                       errors.email && touched.email ? "border-red-500" : "",
+                  }}
+                />
+
+                <TextInput
+                  label={t.users.form.password}
+                  name="password"
+                  type="password"
+                  placeholder={t.users.form.password_placeholder}
+                  classes={{
+                    wrapper: "max-w-sm",
+                    input:
+                      errors.password && touched.password
+                        ? "border-red-500"
+                        : "",
                   }}
                 />
 
@@ -235,7 +226,7 @@ const EditUser: NextPage<{
                     { disabled: !isValid || isValidating || isSubmitting },
                   ])}
                 >
-                  {t.buttons.update}
+                  {t.buttons.create}
                 </button>
               </Form>
             )}
@@ -246,4 +237,4 @@ const EditUser: NextPage<{
   );
 };
 
-export default EditUser;
+export default CreateUser;

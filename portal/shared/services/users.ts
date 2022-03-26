@@ -31,7 +31,12 @@ const findOne = async (
 
 export interface CreateUserDTO {
   name: string;
+  email: string;
+  password: string;
+  country_code: string;
   contact_number: string;
+  gender: "male" | "female" | "other" | "prefer_not_to_say";
+  role: "admin" | "editor" | "viewer";
 }
 
 const create = async (payload: CreateUserDTO): Promise<IApiResponse<IUser>> => {
