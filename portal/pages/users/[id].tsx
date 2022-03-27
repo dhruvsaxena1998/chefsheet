@@ -24,15 +24,13 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
         "clients",
         "inventories",
         "staff_members",
-        "user",
+        "role",
       ],
     });
-
-    const { data: user } = data;
     return {
       props: {
         id,
-        user,
+        user: data,
       },
     };
   } catch (e) {
@@ -65,9 +63,9 @@ const EditUser: NextPage<{
             t.users.form.gender_error_onOf
           )
           .required(t.users.form.gender_error_required),
-        role: Yup.string()
-          .oneOf(["admin", "editor", "viewer"], t.users.form.role_error_onOf)
-          .required(t.users.form.role_error_required),
+        // role: Yup.string()
+        //   .oneOf(["admin", "editor", "viewer"], t.users.form.role_error_onOf)
+        //   .required(t.users.form.role_error_required),
       }),
     [t]
   );
@@ -115,7 +113,7 @@ const EditUser: NextPage<{
               country_code: user.country_code || "+91",
               contact_number: user.contact_number || "",
               gender: user.gender || "null",
-              role: user.role || "editor",
+              // role: user.role || "editor",
             }}
             onSubmit={handleOnSubmit}
             validationSchema={ValidationSchema}
@@ -210,7 +208,7 @@ const EditUser: NextPage<{
                   </>
                 </TextInput>
 
-                <TextInput
+                {/* <TextInput
                   label={t.users.form.role}
                   name="role"
                   type="select"
@@ -230,7 +228,7 @@ const EditUser: NextPage<{
                       {t.users.form.role_option_viewer}
                     </option>
                   </>
-                </TextInput>
+                </TextInput> */}
 
                 <button
                   type="submit"

@@ -23,21 +23,15 @@ interface UsersRow {
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   try {
-    const { page = 1 } = ctx.query;
-    const { data } = await UserService.find({
-      populate: ["profile_image", "user"],
-      pagination: {
-        page,
-      },
+    const { data: users } = await UserService.find({
+      populate: ["profile_image", "role"],
     });
 
-    const { data: users, meta } = data;
-
     return {
-      props: { users, meta },
+      props: { users, meta: {} },
     };
   } catch (e) {
-    return { props: { subCategories: [] } };
+    return { props: { users: [], meta: {} } };
   }
 };
 
@@ -55,7 +49,7 @@ const Users: NextPage<{
         id,
         name,
         contact_number,
-        role,
+        role: role.name,
       })),
     [props.users]
   );
@@ -84,7 +78,7 @@ const Users: NextPage<{
   );
 
   const handleOnDelete = async (row: UsersRow) => {
-    await SubCategoryService.remove(row.id!);
+    await UserService.remove(row.id!);
     refreshSsrProps();
     toast.success(t.users.messages.delete_success);
   };
@@ -131,32 +125,6 @@ const Users: NextPage<{
               onEdit={(row: UsersRow) => handleOnEdit(row)}
               onDelete={(row: UsersRow) => handleOnDelete(row)}
             />
-            <div className="flex justify-center">
-              <div className="btn-group">
-                {Array(props?.meta?.pagination?.pageCount || 0)
-                  .fill(true)
-                  .map((_, index) => {
-                    return (
-                      <div
-                        className={clsx([
-                          "btn btn-sm",
-                          {
-                            "btn-active":
-                              index + 1 === props?.meta?.pagination?.page,
-                          },
-                        ])}
-                        key={index}
-                        onClick={() => {
-                          if (index + 1 !== props.meta.pagination.page)
-                            handlePaginate(index + 1);
-                        }}
-                      >
-                        1
-                      </div>
-                    );
-                  })}
-              </div>
-            </div>
           </div>
         </main>
       </>

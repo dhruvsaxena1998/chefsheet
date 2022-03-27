@@ -11,6 +11,15 @@ export interface StrapiUser {
   updatedAt: Date;
 }
 
+export interface IRole {
+  id: number;
+  name: string;
+  description: string;
+  type: "authenticated";
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export interface IUser {
   id?: number;
   username: string;
@@ -19,7 +28,7 @@ export interface IUser {
   blocked: boolean;
   access: Record<string, unknown>;
   settings: Record<string, unknown>;
-  role: "admin" | "editor" | "viewer";
+  role: IRole;
   gender: "Male" | "Female" | "Prefer not to say";
   contact_number: string;
   country_code: string;

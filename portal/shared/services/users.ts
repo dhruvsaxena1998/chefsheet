@@ -1,11 +1,11 @@
 import { IApiResponse, IApiResponseSingle, Items, IUser } from "@types";
-import { API } from "@utils/axios";
+import { API, client } from "@utils/axios";
 
 const find = async (
   query?: Record<string, unknown>
 ): Promise<IApiResponse<IUser>> => {
   const { data, status } = await API({
-    url: "/admins",
+    url: "/users",
     method: "get",
     query,
   });
@@ -21,7 +21,7 @@ const findOne = async (
   query?: Record<string, unknown>
 ): Promise<IApiResponseSingle<IUser>> => {
   const { data, status } = await API({
-    url: `/admins/${id}`,
+    url: `/users/${id}`,
     method: "get",
     query,
   });
@@ -40,11 +40,7 @@ export interface CreateUserDTO {
 }
 
 const create = async (payload: CreateUserDTO): Promise<IApiResponse<IUser>> => {
-  const { data, status } = await API({
-    url: "/admins",
-    method: "post",
-    body: payload,
-  });
+  const { data, status } = await client.post("/auth/local/register", payload);
 
   return { data, status };
 };
@@ -58,18 +54,14 @@ const update = async (
   id: number,
   payload: UpdateUserDTO
 ): Promise<IApiResponse<IUser>> => {
-  const { data, status } = await API({
-    url: `/admins/${id}`,
-    method: "put",
-    body: payload,
-  });
+  const { data, status } = await client.put(`/users/${id}`, payload);
 
   return { data, status };
 };
 
 const remove = async (id: number): Promise<IApiResponse<IUser>> => {
   const { data, status } = await API({
-    url: `/admins/${id}`,
+    url: `/users/${id}`,
     method: "delete",
   });
 
