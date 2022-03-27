@@ -4,7 +4,7 @@ export type SideBarItems =
   | "category"
   | "sub-category"
   | "items"
-  | "staff"
+  | "staff-members"
   | "users";
 
 export type SearchOptions =
@@ -12,7 +12,7 @@ export type SearchOptions =
   | "category"
   | "items"
   | "sub-category"
-  | "staff";
+  | "staff-members";
 
 export interface Pagination {
   page?: number;
@@ -58,6 +58,9 @@ export interface IApiResponseSingle<T> {
   status: number;
 }
 
+export type { IAddress } from "./address";
+
 export type { ICategory, ISubCategory } from "./category";
 export type { Items } from "./items";
 export type { IUser } from "./users";
+export type { IStaffMember } from "./staff-member";

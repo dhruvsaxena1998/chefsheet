@@ -86,7 +86,7 @@ export const TextInput = (props: PropsWithChildren<ITextInputProps>) => {
           name={name}
           type={type}
           placeholder={placeholder}
-          className={clsx(["input", "input-bordered", classes?.input])}
+          className={clsx(["input input-bordered", classes?.input])}
           validate={props.validate}
           autoComplete={autocomplete}
           disabled={disabled}

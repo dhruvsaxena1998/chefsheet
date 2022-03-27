@@ -28,7 +28,7 @@ export const Sidebar = () => {
         icon: BiCategoryAlt,
       },
       { name: t.options.items, slug: "items", icon: BiCategoryAlt },
-      { name: t.options.staff, slug: "staff", icon: BiCategoryAlt },
+      { name: t.options.staff, slug: "staff-members", icon: BiCategoryAlt },
       { name: t.options.users, slug: "users", icon: BiCategoryAlt },
     ],
     [t]
