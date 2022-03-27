@@ -6,6 +6,7 @@ export const strings = {
     edit: "Edit",
     delete: "Delete",
     search: "Search",
+    login: "Login",
     logout: "Logout",
     back: "Go Back",
   },
@@ -25,6 +26,24 @@ export const strings = {
   },
   messages: {
     internal: "Something went wrong",
+  },
+  login: {
+    title: "Chefsheet - Login",
+    heading: "Login",
+    name: "Chefsheet",
+    form: {
+      email: "Email",
+      email_placeholder: "Enter your email",
+      email_error_invalid: "Please enter a valid email",
+      email_error_required: "Please enter your email",
+      password: "Password",
+      password_placeholder: "Enter your password",
+      password_error_min: "Password must be at least 6 characters",
+      password_error_required: "Please enter your password",
+    },
+    messages: {
+      invalid: "Invalid email or password",
+    }
   },
   category: {
     titles: {

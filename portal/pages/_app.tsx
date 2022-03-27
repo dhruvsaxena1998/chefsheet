@@ -9,6 +9,7 @@ import NProgress from "nprogress";
 
 import { setTheme } from "../shared/services/theme";
 import type { AppProps } from "next/app";
+import { UserProvider } from "shared/hooks/useUser";
 
 function MyApp({ Component, pageProps }: AppProps) {
   useEffect(() => {
@@ -21,8 +22,10 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     <>
-      <Component {...pageProps} />
-      <ToastContainer limit={3} containerId="toastify" />
+      <UserProvider>
+        <Component {...pageProps} />
+        <ToastContainer limit={3} containerId="toastify" />
+      </UserProvider>
     </>
   );
 }

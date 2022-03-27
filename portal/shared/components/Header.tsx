@@ -1,5 +1,6 @@
 import { useTranslation } from "@shared/hooks";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { RiLogoutCircleFill } from "react-icons/ri";
 
 export interface IHeaderProps {
@@ -7,7 +8,14 @@ export interface IHeaderProps {
 }
 
 export const AppHeader = ({ title }: IHeaderProps) => {
+  const router = useRouter();
   const t = useTranslation();
+
+  const logout = () => {
+    localStorage.removeItem("token");
+    router.replace("/login");
+  };
+
   return (
     <div className="navbar bg-base-100">
       <div className="navbar-start">
@@ -16,11 +24,11 @@ export const AppHeader = ({ title }: IHeaderProps) => {
         </Link>
       </div>
       <div className="navbar-end">
-        <Link href="/logout" passHref>
+        <button onClick={logout}>
           <span className="btn gap-2 btn-error text-white">
             <RiLogoutCircleFill size={18} /> {t.buttons.logout}
           </span>
-        </Link>
+        </button>
       </div>
     </div>
   );

@@ -22,6 +22,7 @@ export const SearchBar = ({ slug = "all" }: ISearchBarProps) => {
         label: t.options.sub_categories,
       },
       { value: "items", label: t.options.items },
+      { value: "clients", label: t.options.clients },
       {
         value: "staff-members",
         label: t.options.staff,
