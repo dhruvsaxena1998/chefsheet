@@ -1,11 +1,11 @@
-import { ISubCategory, IApiResponse } from "@types";
+import { ISubCategory, IApiResponse, IClient } from "@types";
 import { API } from "@utils/axios";
 
 const find = async (
   query?: Record<string, unknown>
-): Promise<IApiResponse<ISubCategory>> => {
+): Promise<IApiResponse<IClient>> => {
   const { data, status } = await API({
-    url: "/staff-members",
+    url: "/clients",
     method: "get",
     query,
   });
@@ -19,9 +19,9 @@ const find = async (
 const findOne = async (
   id: number,
   query?: Record<string, unknown>
-): Promise<IApiResponse<ISubCategory>> => {
+): Promise<IApiResponse<IClient>> => {
   const { data, status } = await API({
-    url: `/staff-members/${id}`,
+    url: `/clients/${id}`,
     method: "get",
     query,
   });
@@ -29,12 +29,12 @@ const findOne = async (
   return { data, status };
 };
 
-export interface StaffMemberDTO {
+export interface ClientDTO {
   name: string;
+  email: string;
   country_code: string;
   contact_number: string;
-  gender: "male" | "female" | "other" | "prefer_not_to_say";
-  role: "employee" | "manager" | "contract";
+  settings?: Record<string, unknown>;
   address: {
     plot_no: string;
     line_1: string;
@@ -46,9 +46,7 @@ export interface StaffMemberDTO {
   };
 }
 
-const create = async (
-  payload: StaffMemberDTO
-): Promise<IApiResponse<ISubCategory>> => {
+const create = async (payload: ClientDTO): Promise<IApiResponse<IClient>> => {
   const body = {
     ...payload,
     settings: {
@@ -58,7 +56,7 @@ const create = async (
   };
 
   const { data, status } = await API({
-    url: "/staff-members",
+    url: "/clients",
     method: "post",
     body,
   });
@@ -68,10 +66,10 @@ const create = async (
 
 const update = async (
   id: number,
-  payload: StaffMemberDTO
-): Promise<IApiResponse<ISubCategory>> => {
+  payload: ClientDTO
+): Promise<IApiResponse<IClient>> => {
   const { data, status } = await API({
-    url: `/staff-members/${id}`,
+    url: `/clients/${id}`,
     method: "put",
     body: payload,
   });
@@ -79,13 +77,13 @@ const update = async (
   return { data, status };
 };
 
-const remove = async (id: number): Promise<IApiResponse<ISubCategory>> => {
+const remove = async (id: number): Promise<IApiResponse<IClient>> => {
   const { data, status } = await API({
-    url: `/staff-members/${id}`,
+    url: `/clients/${id}`,
     method: "delete",
   });
 
   return { data, status };
 };
 
-export const StaffMemberService = { find, findOne, create, update, remove };
+export const ClientService = { find, findOne, create, update, remove };

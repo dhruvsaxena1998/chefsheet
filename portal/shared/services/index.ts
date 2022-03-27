@@ -13,3 +13,7 @@ export type { ItemsDTO } from "./items";
 export { UserService } from "./users";
 
 export { StaffMemberService } from "./staff-members";
+export type { StaffMemberDTO } from "./staff-members";
+
+export { ClientService } from "./clients";
+export type { ClientDTO } from "./clients";

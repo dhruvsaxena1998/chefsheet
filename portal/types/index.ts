@@ -1,6 +1,7 @@
 export type SideBarItems =
   | "home"
   | "search"
+  | "clients"
   | "category"
   | "sub-category"
   | "items"
@@ -11,6 +12,7 @@ export type SearchOptions =
   | "all"
   | "category"
   | "items"
+  | "clients"
   | "sub-category"
   | "staff-members";
 
@@ -61,6 +63,7 @@ export interface IApiResponseSingle<T> {
 export type { IAddress } from "./address";
 
 export type { ICategory, ISubCategory } from "./category";
+export type { IClient } from "./client";
 export type { Items } from "./items";
 export type { IUser } from "./users";
 export type { IStaffMember } from "./staff-member";
