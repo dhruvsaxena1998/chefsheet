@@ -7,106 +7,106 @@ import { toast } from "react-toastify";
 import DefaultLayout from "../../layouts/DefaultLayout";
 
 import { useRefresh, useTranslation } from "@shared/hooks";
-import { SubCategoryService } from "@shared/services";
+import { StaffMemberService } from "@shared/services";
 import { Table, SearchBar } from "@shared/components";
 
 import { GetServerSideProps, NextPage } from "next";
-import { IErrors, IMeta, ISubCategory } from "@types";
+import { IErrors, IMeta, IStaffMember } from "@types";
 
-interface SubCategoryRow {
+interface StaffMembersRow {
   id?: number;
   name: string;
-  code: string;
-  category: string;
+  role: string;
+  contact_number: string;
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   try {
     const { page = 1 } = ctx.query;
-    const { data } = await SubCategoryService.find({
-      populate: ["category"],
+    const { data } = await StaffMemberService.find({
       pagination: {
         page,
       },
     });
 
-    const { data: subCategories, meta } = data;
+    const { data: staffMembers, meta } = data;
 
     return {
-      props: { subCategories, meta },
+      props: { staffMembers, meta },
     };
   } catch (e) {
-    return { props: { subCategories: [] } };
+    return { props: { staffMembers: [], meta: {} } };
   }
 };
 
-const SubCategory: NextPage<{
-  subCategories: ISubCategory[];
+const StaffMembers: NextPage<{
+  staffMembers: IStaffMember[];
   meta: IMeta;
   error?: IErrors;
 }> = (props) => {
   const { refresh: refreshSsrProps, router } = useRefresh();
   const t = useTranslation();
 
-  const rows: SubCategoryRow[] = useMemo(
+  const rows: StaffMembersRow[] = useMemo(
     () =>
-      props.subCategories.map(({ id, code, name, category }) => ({
+      props.staffMembers.map(({ id, name, contact_number, role }) => ({
         id,
-        code,
         name,
-        category: category?.data?.name || "",
+        contact_number,
+        role,
       })),
-    [props.subCategories]
+    [props.staffMembers]
   );
-
-  const handleOnDelete = async (row: SubCategoryRow) => {
-    await SubCategoryService.remove(row.id!);
-    refreshSsrProps();
-    toast.success(t.sub_category.messages.delete_success);
-  };
-
-  const handleOnEdit = (row: SubCategoryRow) => {
-    router.push(`/sub-category/${row.id}`);
-  };
-
-  const handlePaginate = (page: number) => {
-    router.push(`/sub-category?page=${page}`);
-  };
 
   const columns = useMemo(
     () => [
       {
-        Header: t.table.name,
+        Header: t.staff_members.table.name,
         accessor: "name",
       },
       {
-        Header: t.table.code,
-        accessor: "code",
+        Header: t.staff_members.table.contact_number,
+        accessor: "contact_number",
       },
       {
-        Header: t.sub_category.table.category,
-        accessor: "category",
+        Header: t.staff_members.table.role,
+        accessor: "role",
+        capitalize: true,
       },
     ],
     [t]
   );
 
+  const handleOnDelete = async (row: StaffMembersRow) => {
+    await StaffMemberService.remove(row.id!);
+    refreshSsrProps();
+    toast.success(t.staff_members.messages.delete_success);
+  };
+
+  const handleOnEdit = (row: StaffMembersRow) => {
+    router.push(`/staff-members/${row.id}`);
+  };
+
+  const handlePaginate = (page: number) => {
+    router.push(`/staff-members?page=${page}`);
+  };
+
   return (
     <DefaultLayout>
       <>
         <Head>
-          <title>{t.sub_category.titles.index}</title>
+          <title>{t.staff_members.titles.index}</title>
         </Head>
 
         <main className="mb-4">
-          <SearchBar slug="sub-category" />
+          <SearchBar slug="staff-members" />
 
           <div className="divider"></div>
           <div className="flex justify-between items-center mb-4s">
             <div className="prose my-4">
-              <h1>{t.sub_category.headings.index}</h1>
+              <h1>{t.staff_members.headings.index}</h1>
             </div>
-            <Link href="/sub-category/create" passHref>
+            <Link href="/staff-members/create" passHref>
               <div className="btn btn-wide bg-indigo-500 text-white border-0">
                 {t.buttons.create}
               </div>
@@ -122,8 +122,8 @@ const SubCategory: NextPage<{
                 table: "table w-full",
               }}
               actions={["edit", "delete"]}
-              onEdit={(row: SubCategoryRow) => handleOnEdit(row)}
-              onDelete={(row: SubCategoryRow) => handleOnDelete(row)}
+              onEdit={(row: StaffMembersRow) => handleOnEdit(row)}
+              onDelete={(row: StaffMembersRow) => handleOnDelete(row)}
             />
             <div className="flex justify-center">
               <div className="btn-group">
@@ -158,4 +158,4 @@ const SubCategory: NextPage<{
   );
 };
 
-export default SubCategory;
+export default StaffMembers;
