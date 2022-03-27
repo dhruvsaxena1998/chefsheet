@@ -24,10 +24,6 @@
       "required": false,
       "maxLength": 4
     },
-    "code": {
-      "type": "uid",
-      "targetField": "name"
-    },
     "role": {
       "type": "enumeration",
       "enum": [
@@ -44,6 +40,15 @@
       "type": "component",
       "repeatable": false,
       "component": "shared.address"
+    },
+    "gender": {
+      "type": "enumeration",
+      "enum": [
+        "male",
+        "female",
+        "other",
+        "prefer_not_to_say"
+      ]
     }
   }
 }
