@@ -38,9 +38,9 @@ const CreateUser: NextPage = () => {
             t.users.form.gender_error_onOf
           )
           .required(t.users.form.gender_error_required),
-        // role: Yup.string()
-        //   .oneOf(["admin", "editor", "viewer"], t.users.form.role_error_onOf)
-        //   .required(t.users.form.role_error_required),
+        role: Yup.string()
+          .oneOf(["admin", "editor", "viewer"], t.users.form.role_error_onOf)
+          .required(t.users.form.role_error_required),
         password: Yup.string()
           .min(6, t.users.form.password_error_min)
           .required(t.users.form.password_error_required),
@@ -195,7 +195,7 @@ const CreateUser: NextPage = () => {
                   </>
                 </TextInput>
 
-                {/* <TextInput
+                <TextInput
                   label={t.users.form.role}
                   name="role"
                   type="select"
@@ -215,7 +215,7 @@ const CreateUser: NextPage = () => {
                       {t.users.form.role_option_viewer}
                     </option>
                   </>
-                </TextInput> */}
+                </TextInput>
 
                 <button
                   type="submit"

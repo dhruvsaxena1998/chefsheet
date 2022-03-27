@@ -27,6 +27,18 @@ export const SearchBar = ({ slug = "all" }: ISearchBarProps) => {
         value: "staff-members",
         label: t.options.staff,
       },
+      {
+        value: "users",
+        label: 'Users',
+      },
+      {
+        value: "events",
+        label: t.options.staff,
+      },
+      {
+        value: "inventory",
+        label: t.options.staff,
+      },
     ],
     [t]
   );

@@ -99,7 +99,7 @@ const Users: NextPage<{
         </Head>
 
         <main className="mb-4">
-          <SearchBar slug="sub-category" />
+          <SearchBar slug="users" />
 
           <div className="divider"></div>
           <div className="flex justify-between items-center mb-4s">

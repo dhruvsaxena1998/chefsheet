@@ -4,6 +4,9 @@ import { useRouter } from "next/router";
 
 import { IconType } from "react-icons";
 import { BiCategory, BiCategoryAlt, BiSearchAlt } from "react-icons/bi";
+import { MdInventory, MdOutlineInventory2, MdPeopleAlt, MdOutlineEvent } from "react-icons/md";
+import { IoIosPeople } from "react-icons/io";
+import { FaPeopleCarry } from "react-icons/fa";
 
 import { SideBarItems } from "@types";
 import { useTranslation } from "@shared/hooks";
@@ -21,16 +24,18 @@ export const Sidebar = () => {
   const sideBarData: SideBar[] = useMemo(
     () => [
       { name: t.options.search, slug: "search", icon: BiSearchAlt },
+      { name: t.options.events, slug: "events", icon: MdOutlineEvent },
       { name: t.options.categories, slug: "category", icon: BiCategory },
       {
         name: t.options.sub_categories,
         slug: "sub-category",
         icon: BiCategoryAlt,
       },
-      { name: t.options.items, slug: "items", icon: BiCategoryAlt },
-      { name: t.options.staff, slug: "staff-members", icon: BiCategoryAlt },
-      { name: t.options.users, slug: "users", icon: BiCategoryAlt },
-      { name: t.options.clients, slug: "clients", icon: BiCategoryAlt },
+      { name: t.options.items, slug: "items", icon: MdOutlineInventory2 },
+      { name: t.options.inventory, slug: "inventory", icon: MdInventory },
+      { name: t.options.staff, slug: "staff-members", icon: IoIosPeople },
+      { name: t.options.users, slug: "users", icon: MdPeopleAlt },
+      { name: t.options.clients, slug: "clients", icon: FaPeopleCarry },
     ],
     [t]
   );

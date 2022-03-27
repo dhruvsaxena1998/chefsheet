@@ -3,6 +3,8 @@ export type SideBarItems =
   | "search"
   | "clients"
   | "category"
+  | "inventory"
+  | "events"
   | "sub-category"
   | "items"
   | "staff-members"
@@ -10,11 +12,14 @@ export type SideBarItems =
 
 export type SearchOptions =
   | "all"
-  | "category"
-  | "items"
   | "clients"
+  | "category"
+  | "inventory"
+  | "events"
   | "sub-category"
-  | "staff-members";
+  | "items"
+  | "staff-members"
+  | "users";
 
 export interface Pagination {
   page?: number;

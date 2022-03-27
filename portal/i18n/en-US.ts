@@ -18,6 +18,8 @@ export const strings = {
     staff: "Staff Members",
     users: "Users",
     clients: "Clients",
+    inventory: "Inventory",
+    events: "Events"
   },
   table: {
     name: "Name",
@@ -43,7 +45,7 @@ export const strings = {
     },
     messages: {
       invalid: "Invalid email or password",
-    }
+    },
   },
   category: {
     titles: {

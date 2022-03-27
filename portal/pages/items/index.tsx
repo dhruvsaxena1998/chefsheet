@@ -122,7 +122,7 @@ const Items: NextPage<{
         </Head>
 
         <main className="mb-4">
-          <SearchBar slug="sub-category" />
+          <SearchBar slug="items" />
 
           <div className="divider"></div>
           <div className="flex justify-between items-center mb-4s">
