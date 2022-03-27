@@ -34,5 +34,30 @@ module.exports = (plugin) => {
     };
   };
 
+  plugin.controllers.user.find = async (ctx) => {
+    const { populate, ...params } = ctx.request.query;
+
+    const users = await strapi
+      .service("plugin::users-permissions.user")
+      .fetchAll(params, populate);
+
+    ctx.body = users.map(sanitizeOutput);
+  };
+
+  plugin.controllers.user.findOne = async (ctx) => {
+    const { populate, ...params } = ctx.request.query;
+    const { id } = ctx.request.params;
+
+    const user = await strapi.service("plugin::users-permissions.user").fetch(
+      {
+        ...params,
+        id,
+      },
+      populate
+    );
+
+    ctx.body = sanitizeOutput(user);
+  };
+
   return plugin;
 };

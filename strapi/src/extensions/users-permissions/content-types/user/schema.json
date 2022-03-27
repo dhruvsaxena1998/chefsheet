@@ -68,6 +68,54 @@
       "relation": "oneToOne",
       "target": "api::admin.admin",
       "inversedBy": "user"
+    },
+    "inventories": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::inventory.inventory"
+    },
+    "staff_members": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::staff-member.staff-member"
+    },
+    "clients": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::client.client"
+    },
+    "access": {
+      "type": "json"
+    },
+    "settings": {
+      "type": "json"
+    },
+    "country_code": {
+      "type": "string",
+      "default": "+91"
+    },
+    "contact_number": {
+      "type": "string"
+    },
+    "profile_image": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "name": {
+      "type": "string"
+    },
+    "gender": {
+      "type": "enumeration",
+      "enum": [
+        "male",
+        "female",
+        "other",
+        "prefer_not_to_say"
+      ]
     }
   }
 }
