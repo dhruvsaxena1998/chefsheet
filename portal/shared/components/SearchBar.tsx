@@ -46,7 +46,7 @@ export const SearchBar = ({ slug = "all" }: ISearchBarProps) => {
   return (
     <div className="form-control">
       <div className="input-group">
-        <select className="select bg-base-200" defaultValue={slug}>
+        <select className="select bg-slate-700 text-white border-2" defaultValue={slug}>
           {slug === "all" ? (
             <>
               <option disabled value="all">
@@ -69,7 +69,7 @@ export const SearchBar = ({ slug = "all" }: ISearchBarProps) => {
           placeholder={"Search here"}
           className={"input bg-base-300 w-full rounded-lg"}
         />
-        <button className="btn btn-wide bg-base-200 tracking-wider border-0">
+        <button className="btn btn-wide tracking-wider border-0">
           {t.buttons.search}
         </button>
       </div>

@@ -24,8 +24,8 @@ export const AppHeader = ({ title }: IHeaderProps) => {
         </Link>
       </div>
       <div className="navbar-end">
-        <button onClick={logout}>
-          <span className="btn gap-2 btn-error text-white">
+        <button onClick={logout} className="border-0">
+          <span className="btn gap-2 bg-red-500  text-white">
             <RiLogoutCircleFill size={18} /> {t.buttons.logout}
           </span>
         </button>
