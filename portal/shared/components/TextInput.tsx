@@ -47,6 +47,7 @@ export const TextInput = (props: PropsWithChildren<ITextInputProps>) => {
 
   return (
     <div className={clsx(["form-control", classes?.wrapper])}>
+      {/* Render label for text input if provided from props */}
       {label && (
         <label className={clsx(["label", classes?.label])} htmlFor={name}>
           <span className={clsx(["label-text", classes?.labelText])}>
@@ -54,6 +55,12 @@ export const TextInput = (props: PropsWithChildren<ITextInputProps>) => {
           </span>
         </label>
       )}
+      {/* 
+        Same Field is rendred for every type of input,
+        Exception - Textarea and Select box
+      */}
+
+      {/* If type is slect render this Field */}
       {type === "select" ? (
         <Field
           id={name}
@@ -70,6 +77,7 @@ export const TextInput = (props: PropsWithChildren<ITextInputProps>) => {
           {children}
         </Field>
       ) : type === "textarea" ? (
+        // Render textarea if type is textarea
         <Field
           id={name}
           name={name}
@@ -81,6 +89,7 @@ export const TextInput = (props: PropsWithChildren<ITextInputProps>) => {
           disabled={disabled}
         />
       ) : (
+        // Render this Field if type is not select or textarea
         <Field
           id={name}
           name={name}
@@ -92,6 +101,7 @@ export const TextInput = (props: PropsWithChildren<ITextInputProps>) => {
           disabled={disabled}
         />
       )}
+      {/* Render a hint label if hint is provided in property */}
       {hint && (
         <span
           className={clsx(["mt-1 ml-2 text-slate-300 text-sm", classes?.hint])}
@@ -99,6 +109,7 @@ export const TextInput = (props: PropsWithChildren<ITextInputProps>) => {
           {hint}
         </span>
       )}
+      {/*Show Error Message if error validation occoures*/}
       <ErrorMessage
         name={name}
         component="div"
